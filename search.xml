@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>模仿搭建的基于hexo博客</title>
+      <link href="/2021/12/18/%E6%A8%A1%E4%BB%BF%E6%90%AD%E5%BB%BA%E7%9A%84%E5%9F%BA%E4%BA%8Ehexo%E5%8D%9A%E5%AE%A2/"/>
+      <url>/2021/12/18/%E6%A8%A1%E4%BB%BF%E6%90%AD%E5%BB%BA%E7%9A%84%E5%9F%BA%E4%BA%8Ehexo%E5%8D%9A%E5%AE%A2/</url>
+      
+        <content type="html"><![CDATA[<p>​        第一次试着使用hexo + github page的方式搭建了一个博客，因为还刚学习不是很熟悉，当前使用的主题来自<a href="https://github.com/fi3ework/hexo-theme-archer.git">https://github.com/fi3ework/hexo-theme-archer.git</a>  。</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hello World</title>
       <link href="/2021/12/17/hello-world/"/>
       <url>/2021/12/17/hello-world/</url>
