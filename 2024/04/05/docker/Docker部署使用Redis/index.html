@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="docker部署redis使用 查看dock er上可用的Redis版本    ​	docker pull redis ​	下载redis镜像，默认下载的是最新版本的。 ​	我们还可以用 docker search redis 命令来查看可用版本。  下载镜像之后，运行一个Redis实例  ​	docker run --name some-redis -d redis ​	运行镜像实例。  查看本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/04/05/docker/Docker%E9%83%A8%E7%BD%B2%E4%BD%BF%E7%94%A8Redis/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="docker部署redis使用 查看dock er上可用的Redis版本    ​	docker pull redis ​	下载redis镜像，默认下载的是最新版本的。 ​	我们还可以用 docker search redis 命令来查看可用版本。  下载镜像之后，运行一个Redis实例  ​	docker run --name some-redis -d redis ​	运行镜像实例。  查看本">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Docker%E9%83%A8%E7%BD%B2%E4%BD%BF%E7%94%A8Redis.png">
+<meta property="article:published_time" content="2024-04-05T14:53:22.834Z">
+<meta property="article:modified_time" content="2024-04-05T14:53:22.834Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Docker%E9%83%A8%E7%BD%B2%E4%BD%BF%E7%94%A8Redis.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-docker/Docker部署使用Redis" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/04/05/docker/Docker%E9%83%A8%E7%BD%B2%E4%BD%BF%E7%94%A8Redis/" class="article-date">
+  <time class="dt-published" datetime="2024-04-05T14:53:22.834Z" itemprop="datePublished">2024-04-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="docker部署redis使用"><a href="#docker部署redis使用" class="headerlink" title="docker部署redis使用"></a>docker部署redis使用</h1><ol>
+<li><p>查看dock er上可用的Redis版本</p>
+<p><img src="/images/Docker%E9%83%A8%E7%BD%B2%E4%BD%BF%E7%94%A8Redis.png" alt="image-20230506131135818"></p>
+</li>
+</ol>
+<p>​	<code>docker pull redis</code></p>
+<p>​	下载redis镜像，默认下载的是最新版本的。</p>
+<p>​	我们还可以用 <strong>docker search redis</strong> 命令来查看可用版本。</p>
+<ol start="2">
+<li>下载镜像之后，运行一个Redis实例</li>
+</ol>
+<p>​	<code>docker run --name some-redis -d redis</code></p>
+<p>​	运行镜像实例。</p>
+<ol start="3">
+<li>查看本地Redis镜像</li>
+</ol>
+<p>​    <code>docker images</code></p>
+<ol start="4">
+<li>运行容器</li>
+</ol>
+<p><code>docker run -itd --name redis-test -p 6379:6379 redis</code></p>
+<ol start="5">
+<li>指定redis.conf配置文件来启动redis</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 6379:6379 </span><br><span class="line">--name myredis \</span><br><span class="line">-v /usr/local/docker/redis/redis.conf:/etc/redis/redis.conf \</span><br><span class="line">-v /usr/local/docker/redis/data:/data \</span><br><span class="line">-d redis \</span><br><span class="line">redis-server /etc/redis/redis.conf --appendonly <span class="built_in">yes</span></span><br></pre></td></tr></table></figure>
+
+<p>参数解释说明：</p>
+<ul>
+<li>-p 6379:6379 端口映射：前表示宿主机部分，：后表示容器部分。</li>
+<li>–name myredis  指定该容器名称，查看和进行操作都比较方便。</li>
+<li>-v 挂载目录，规则与端口映射相同。<br> 为什么需要挂载目录：个人认为docker是个沙箱隔离级别的容器，这个是它的特点及安全机制，不能随便访问外部（主机）资源目录，所以需要这个挂载目录机制。<br> 例： -v &#x2F;usr&#x2F;local&#x2F;docker&#x2F;redis&#x2F;redis.conf:&#x2F;etc&#x2F;redis&#x2F;redis.conf  容器 &#x2F;etc&#x2F;redis&#x2F;redis.conf 配置文件 映射宿主机 &#x2F;usr&#x2F;local&#x2F;docker&#x2F;redis&#x2F;redis.conf。  会将宿主机的配置文件复制到docker中<br> <strong>重要： 配置文件映射，docker镜像redis 默认无配置文件。</strong></li>
+<li>-d redis 表示后台启动redis</li>
+<li>redis-server &#x2F;etc&#x2F;redis&#x2F;redis.conf  以配置文件启动redis，加载容器内的conf文件，最终找到的是挂载的目录&#x2F;usr&#x2F;local&#x2F;docker&#x2F;redis&#x2F;redis.conf<br> <strong>重要:  docker 镜像reids 默认 无配置文件启动</strong></li>
+<li>–appendonly yes  开启redis 持久化</li>
+</ul>
+<ol start="6">
+<li>交互式访问docker中的redis</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it myredis /bin/bash</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>个人参考配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 6379:6379 \</span><br><span class="line">--name myredis \</span><br><span class="line">-v /Users/xujia/MyCode/docker_project/redis-6.0.8/redis.conf:/etc/redis/redis.conf \</span><br><span class="line">-v /Users/xujia/MyCode/docker_project/redis-6.0.8/data:/data \</span><br><span class="line">-d redis:6.0.8 \</span><br><span class="line">redis-server /etc/redis/redis.conf --appendonly yes</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/04/05/docker/Docker%E9%83%A8%E7%BD%B2%E4%BD%BF%E7%94%A8Redis/" data-id="clumsd6x40004abr76ori3aky" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/04/05/docker/Docker%E9%83%A8%E7%BD%B2%E4%BD%BF%E7%94%A8mongo/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/04/05/docker/Docker%E9%83%A8%E7%BD%B2mysql%E4%B8%BB%E4%BB%8E%E9%9B%86%E7%BE%A4/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/04/05/%E6%95%B0%E4%BB%93%E7%BB%8F%E9%AA%8C/%E9%9D%A2%E8%AF%95%E9%A2%98/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/Zookeeper/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA(HA)/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%BC%96%E7%A8%8B-RDD%E9%AB%98%E9%98%B6/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

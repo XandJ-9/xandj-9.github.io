@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="使用Docker来搭建Hadoop的学习集群环境1. 集群规划​	1.1 hadoop版本 ​		本次实验使用Hadoop-3.1.3， 安装包选择 hadoop-3.1.3.tar.gz ​	1.2 节点数量 ​		构建3个节点的集群，因此需要部署三个docker容器， 1个namenode,2个datanode节点，并且其中一个datanode作为second namenode.  docke">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/04/05/docker/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="使用Docker来搭建Hadoop的学习集群环境1. 集群规划​	1.1 hadoop版本 ​		本次实验使用Hadoop-3.1.3， 安装包选择 hadoop-3.1.3.tar.gz ​	1.2 节点数量 ​		构建3个节点的集群，因此需要部署三个docker容器， 1个namenode,2个datanode节点，并且其中一个datanode作为second namenode.  docke">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525154530209.png">
+<meta property="og:image" content="http://example.com/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525161653232.png">
+<meta property="og:image" content="http://example.com/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525162006220.png">
+<meta property="og:image" content="http://example.com/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525162105096.png">
+<meta property="og:image" content="http://example.com/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525161054581.png">
+<meta property="og:image" content="http://example.com/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525161200205.png">
+<meta property="og:image" content="http://example.com/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525162630077.png">
+<meta property="article:published_time" content="2024-04-05T14:53:22.830Z">
+<meta property="article:modified_time" content="2024-04-05T14:53:22.831Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525154530209.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-docker/使用Docker来搭建Hadoop的学习集群环境" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/04/05/docker/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83/" class="article-date">
+  <time class="dt-published" datetime="2024-04-05T14:53:22.830Z" itemprop="datePublished">2024-04-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="使用Docker来搭建Hadoop的学习集群环境"><a href="#使用Docker来搭建Hadoop的学习集群环境" class="headerlink" title="使用Docker来搭建Hadoop的学习集群环境"></a>使用Docker来搭建Hadoop的学习集群环境</h1><h2 id="1-集群规划"><a href="#1-集群规划" class="headerlink" title="1. 集群规划"></a>1. 集群规划</h2><p>​	1.1 hadoop版本</p>
+<p>​		本次实验使用Hadoop-3.1.3， 安装包选择 hadoop-3.1.3.tar.gz</p>
+<p>​	1.2 节点数量</p>
+<p>​		构建3个节点的集群，因此需要部署三个docker容器， 1个namenode,2个datanode节点，并且其中一个datanode作为second namenode.</p>
+<ol start="2">
+<li><p>docker虚拟机环境准备</p>
+<blockquote>
+<p>下载centos版本服务器</p>
+</blockquote>
+</li>
+<li><p>hostname与ip</p>
+<blockquote>
+<p>hadoop集群要求节点具有固定的hostname和ip，在此做如下规划：<br>namenode的hostname为master，ip为192.168.0.10<br>第1个datanode的hostname为slave1，ip为192.168.0.11<br>第2个datanode的hostname为slave2，ip为192.168.0.12</p>
+</blockquote>
+</li>
+</ol>
+<p>​	</p>
+<ol start="4">
+<li><p>端口</p>
+<blockquote>
+<p>  hadoop集群提供了网页管理界面，主要包括hdfs（文件系统）、cluster（集群）、jobhistory（历史任务）三大部分，每个部分都有访问的端口号。通过查阅官方文档确认了默认的端口号分别为9870、8088、19888，我们直接使用这些默认的端口号</p>
+</blockquote>
+</li>
+</ol>
+<p>​		<strong>这些端口在构建docker容器时需要指定对外，允许外部访问</strong></p>
+<h2 id="2-hadoop镜像构建"><a href="#2-hadoop镜像构建" class="headerlink" title="2. hadoop镜像构建"></a>2. hadoop镜像构建</h2><h3 id="2-1-编写Dockerfile"><a href="#2-1-编写Dockerfile" class="headerlink" title="2.1 编写Dockerfile"></a>2.1 编写Dockerfile</h3><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 镜像源</span></span><br><span class="line"><span class="keyword">FROM</span> centos:<span class="number">7</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加元数据  </span></span><br><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> author=<span class="string">&quot;jxu&quot;</span> <span class="built_in">date</span>=<span class="string">&quot;2023/05/25&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装openssh-server和sudo软件包，并且将sshd的UsePAM参数设置成no</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> yum install -y openssh-server sudo</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> sed -i <span class="string">&#x27;s/UsePAM yes/UsePAM no/g&#x27;</span> /etc/ssh/sshd_config</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装openssh-clients</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> yum install -y openssh-clients</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装which</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> yum install -y <span class="built_in">which</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加测试用户root，密码root，并且将此用户添加到sudoers里</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">echo</span> <span class="string">&quot;root:root&quot;</span> | chpasswd</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">echo</span> <span class="string">&quot;root ALL=(ALL) ALL&quot;</span> &gt;&gt; /etc/sudoers</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动sshd服务并且暴露22端口</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">mkdir</span> /var/run/sshd</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">22</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 拷贝并解压jdk，根据自己的版本修改</span></span><br><span class="line"><span class="keyword">ADD</span><span class="language-bash"> jdk-8u202-linux-arm64-vfp-hflt.tar.gz /usr/local/</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">mv</span> /usr/local/jdk1.8.0_202 /usr/local/jdk1.8</span></span><br><span class="line"><span class="keyword">ENV</span> JAVA_HOME /usr/local/jdk1.<span class="number">8</span></span><br><span class="line"><span class="keyword">ENV</span> PATH $JAVA_HOME/bin:$PATH</span><br><span class="line"></span><br><span class="line"><span class="comment"># 拷贝并解压hadoop，根据自己的版本修改</span></span><br><span class="line"><span class="keyword">ADD</span><span class="language-bash"> hadoop-3.1.3.tar.gz /usr/local</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">mv</span> /usr/local/hadoop-3.1.3 /usr/local/hadoop</span></span><br><span class="line"><span class="keyword">ENV</span> HADOOP_HOME /usr/local/hadoop</span><br><span class="line"><span class="keyword">ENV</span> PATH $HADOOP_HOME/bin:$PATH</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置容器启动命令</span></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;/usr/sbin/sshd&quot;</span>, <span class="string">&quot;-D&quot;</span>]</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-2-使用dockerfile构建镜像"><a href="#2-2-使用dockerfile构建镜像" class="headerlink" title="2.2 使用dockerfile构建镜像"></a>2.2 使用dockerfile构建镜像</h3><p>​		在本地新建一个自定义名称的文件夹，将上述的Dockerfile、hadoop-3.1.3.tar.gz、jdk-8u202-linux-arm64-vfp-hflt.tar.gz拷贝到该文件夹下，然后使用终端进入该目录，并运行<code>docker build -t hadoop-test .</code>别忘了后面的<code>.</code></p>
+<p><img src="/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525154530209.png" alt="image-20230525154530209"></p>
+<p>构建好的镜像可以在docker desktop查看到</p>
+<p><img src="/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525161653232.png" alt="image-20230525161653232"></p>
+<h2 id="3-集群配置"><a href="#3-集群配置" class="headerlink" title="3. 集群配置"></a>3. 集群配置</h2><p>​		我们先用上述构建好的镜像运行一个测试容器，在此容器中配置好参数后，保存为新的镜像，这样以后构建node容器就不用重新配置了。</p>
+<p>构建容器 docker run -d –name hadoop-test hadoop-test<br>进入容器 docker exec -it hadoop-test bash<br>进入hadoop配置目录 cd &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;</p>
+<h3 id="3-1-配置hadoop环境变量-hadoop-env-sh"><a href="#3-1-配置hadoop环境变量-hadoop-env-sh" class="headerlink" title="3.1 配置hadoop环境变量 hadoop-env.sh"></a>3.1 配置hadoop环境变量 hadoop-env.sh</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">export HDFS_NAMENODE_USER=root</span><br><span class="line">export HDFS_DATANODE_USER=root</span><br><span class="line">export HDFS_SECONDARYNAMENODE_USER=root</span><br><span class="line">export YARN_RESOURCEMANAGER_USER=root</span><br><span class="line">export YARN_NODEMANAGER_USER=root</span><br><span class="line">export JAVA_HOME=/usr/local/jdk1.8</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-配置核心参数-core-site-xml"><a href="#3-2-配置核心参数-core-site-xml" class="headerlink" title="3.2 配置核心参数 core-site.xml"></a>3.2 配置核心参数 core-site.xml</h3><p>io.file.buffer.size：文件缓冲区大小，默认为4096（4MB），可以按需修改<br>fs.trash.interval：清理回收站的间隔，单位为分钟，默认为0，表示hdfs里删除的文件不会进入回收站，而是直接删除，可以按需修改</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://master:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/usr/local/hadoop/tmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>io.file.buffer.size<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>131702<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.trash.interval<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>1440<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-配置hdfs-hdfs-site-xml"><a href="#3-3-配置hdfs-hdfs-site-xml" class="headerlink" title="3.3 配置hdfs hdfs-site.xml"></a>3.3 配置hdfs hdfs-site.xml</h3><p>dfs.namenode.name.dir：namenode存储表信息的路径<br>dfs.datanode.data.dir：datanode存储实际文件数据块的路径<br>dfs.replication：文件副本个数，不超过datanode的个数<br>dfs.namenode.secondary.http-address：secondary namenode服务网址，端口号默认为9868，可按需修改</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.name.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/usr/local/hadoop/hdfs/name<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.data.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/usr/local/hadoop/hdfs/data<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>2<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.secondary.http-address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>master:9001<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-配置资源管理-yarn-site-xml"><a href="#3-4-配置资源管理-yarn-site-xml" class="headerlink" title="3.4 配置资源管理 yarn-site.xml"></a>3.4 配置资源管理 yarn-site.xml</h3><p>yarn.resourcemanager.hostname：yarn管理的主机名<br>yarn.nodemanager.aux-services：默认<br>yarn.log-aggregation-enable：是否聚合各子节点的日志信息到主节点，设置为是，不然在web上看不到日志<br>yarn.log-aggregation.retain-seconds：日志保存时长，单位秒，默认为-1，不删除，可按需设置</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Site specific YARN configuration properties --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>master<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.log-aggregation-enable<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.log-aggregation.retain-seconds<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>640800<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-5-配置分布式计算mapred-site-xml"><a href="#3-5-配置分布式计算mapred-site-xml" class="headerlink" title="3.5 配置分布式计算mapred-site.xml"></a>3.5 配置分布式计算mapred-site.xml</h3><p>mapreduce.framework.name：用于执行MapReduce作业的运行时框架，可选项是local、classic、yarn，默认为local，我们选yarn<br>mapreduce.jobhistory.address：日志历史服务器地址，默认为0.0.0.0:10020，可按需修改<br>mapreduce.jobhistory.webapp.address：日志历史网页地址，默认为0.0.0.0:19888，可按需修改</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>master:10020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.webapp.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>master:19888<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.app.mapreduce.am.env<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>HADOOP_MAPRED_HOME=$HADOOP_HOME<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.map.env<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>HADOOP_MAPRED_HOME=$HADOOP_HOME<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.reduce.env<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>HADOOP_MAPRED_HOME=$HADOOP_HOME<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>配置子节点 vi workers hadoop2配置的slaves，这是2与3的一大差别<br>将文中的localhost用我们的datanode的hostname替换</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">slave1</span><br><span class="line">slave2</span><br></pre></td></tr></table></figure>
+
+
+
+<p>到此hadoop的配置基本搞定，退出并关闭容器<br>将此容器保存为新的镜像 hadoop</p>
+<p> <code>docker commit hadoop-test hadoop:base</code></p>
+<p><img src="/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525162006220.png" alt="image-20230525162006220"></p>
+<h2 id="4-集群搭建"><a href="#4-集群搭建" class="headerlink" title="4. 集群搭建"></a>4. 集群搭建</h2><p>   配置好上述的集群镜像，之后就可以开始搭建集群容器。</p>
+<h3 id="4-1-构建docker网桥"><a href="#4-1-构建docker网桥" class="headerlink" title="4.1 构建docker网桥"></a>4.1 构建docker网桥</h3><p>   ​		之前说过，hadoop要求节点具有固定ip，docker可以通过network为容器配置固定ip</p>
+<blockquote>
+<p>docker network create –subnet&#x3D;192.168.0.0&#x2F;24 hadoop</p>
+<p>其中24表示ip的前24位为固定，后8为可用，即192.168.0.1-192.168.0.254可用，hadoop为network的名称，此部分可按需修改</p>
+</blockquote>
+<h3 id="4-2-构建node容器"><a href="#4-2-构建node容器" class="headerlink" title="4.2 构建node容器"></a>4.2 构建node容器</h3><p>   ​		分别运行如下命令构建master、slave1、slave2三个容器，其中–hostname用于设置node的主机名称，–ip用于配置固定ip</p>
+<p>   我们为master绑定8088、9870、19888端口号，便于在本地访问</p>
+<p>   需要注意的是，我们在构建镜像时为容器设置了启动命令<code>CMD [&quot;/usr/sbin/sshd&quot;, &quot;-D&quot;]</code>（Dockerfile最后一行，使容器启动时自动启动ssh服务），所以不要使用<code>docker run -itd</code>来构建容器，否则会被后面自定义的命令（如bash）替换，导致ssh未启动，从而出现22端口无法访问的问题</p>
+<blockquote>
+<p>docker run -d –name master –hostname master –network hadoop –ip 192.168.0.10 -P -p 8088:8088 -p 9870:9870 -p 19888:19888 hadoop:base<br>docker run -d –name slave1 –hostname slave1 –network hadoop –ip 192.168.0.11 -P hadoop:base<br>docker run -d –name slave2 –hostname slave2 –network hadoop –ip 192.168.0.12 -P hadoop:base</p>
+</blockquote>
+<p>​	启动三个容器节点，分别指定hostname和静态ip</p>
+<p>启动好容器，如图所示</p>
+<p><img src="/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525162105096.png" alt="image-20230525162105096"></p>
+<h3 id="4-3-配置node免密登录"><a href="#4-3-配置node免密登录" class="headerlink" title="4.3 配置node免密登录"></a>4.3 配置node免密登录</h3><p>   进入master容器 <code>docker exec -it master bash</code><br>   生成密钥 ssh-keygen 一直回车就行<br>   将密钥分发给其他node，此过程需要输入 yes 和 密码（Dockerfile里设置的是root）</p>
+<blockquote>
+<p>ssh-copy-id master<br>ssh-copy-id slave1<br>ssh-copy-id slave2</p>
+</blockquote>
+<p>   进入其他datanode节点做上述同样的操作</p>
+<h3 id="4-4-启动服务"><a href="#4-4-启动服务" class="headerlink" title="4.4 启动服务"></a>4.4 启动服务</h3><p>   ok，终于全都配置好了，回到master容器去启动服务</p>
+<p>   格式化hdfs <code>hdfs namenode -format</code></p>
+<p>​	<strong>注意，第一次格式化就行，以后慎用，格式化会导致namenode的clusterID和datanode的clusterID不一致，以致datanode无法启动</strong></p>
+<p>   启动服务 <code>$HADOOP_HOME/sbin/start-all.sh</code><br>   启动历史日志服务 <code>$HADOOP_HOME/bin/mapred --daemon start historyserver</code><br>   查看启动的服务 jps，master节点有如下服务表示正常</p>
+<p><img src="/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525161054581.png" alt="image-20230525161054581"></p>
+<p>jps查看进程</p>
+<p><img src="/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525161200205.png" alt="image-20230525161200205"></p>
+<h3 id="4-5-关闭服务"><a href="#4-5-关闭服务" class="headerlink" title="4.5 关闭服务"></a>4.5 关闭服务</h3><p>如果需要关闭服务，可执行以下命令</p>
+<ol>
+<li>关闭历史任务服务 <code>$HADOOP_HOME/bin/mapred --daemon stop historyserver</code></li>
+<li>关闭服务 <code>$HADOOP_HOME/sbin/stop-all.sh</code></li>
+</ol>
+<h2 id="5-集群测试"><a href="#5-集群测试" class="headerlink" title="5. 集群测试"></a>5. 集群测试</h2><p>登陆到master节点上，创建文件上传到集群上，并查看文件是否上传成功</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vi test.txt</span><br><span class="line"></span><br><span class="line">hdfs dfs -put test.txt /</span><br><span class="line"></span><br><span class="line">hdfs dfs -ls /</span><br></pre></td></tr></table></figure>
+
+<p>也可以通过浏览器本地查看</p>
+<p><code>http://localhost:9870/dfshealth.html#tab-overview</code></p>
+<p><img src="/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83.assets/image-20230525162630077.png" alt="image-20230525162630077"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/04/05/docker/%E4%BD%BF%E7%94%A8Docker%E6%9D%A5%E6%90%AD%E5%BB%BAHadoop%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83/" data-id="clumsd6x50005abr7fu0y1lo6" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/04/05/docker/Docker%E5%85%A5%E9%97%A8%E4%BD%BF%E7%94%A8/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/04/05/README/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/04/05/%E6%95%B0%E4%BB%93%E7%BB%8F%E9%AA%8C/%E9%9D%A2%E8%AF%95%E9%A2%98/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/Zookeeper/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA(HA)/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%BC%96%E7%A8%8B-RDD%E9%AB%98%E9%98%B6/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

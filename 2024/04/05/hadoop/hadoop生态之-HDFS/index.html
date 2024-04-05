@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="HDFS概述什么是HDFS？​		HDFS（Hadoop Distributed File System）， 它是一个分布式文件系统，用于存储文件，通过目录树来定位文件；其次，它是分布式的，由多台服务器联合起来实现其功能，集群中的服务器有各自的角色。 ​		HDFS的使用场景：适合一次写入，多次读出的场景。一个文件经过创建，写入和关闭之后就不会改变。 HDFS优缺点？优点  高容错性  数据自动保">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/04/05/hadoop/hadoop%E7%94%9F%E6%80%81%E4%B9%8B-HDFS/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="HDFS概述什么是HDFS？​		HDFS（Hadoop Distributed File System）， 它是一个分布式文件系统，用于存储文件，通过目录树来定位文件；其次，它是分布式的，由多台服务器联合起来实现其功能，集群中的服务器有各自的角色。 ​		HDFS的使用场景：适合一次写入，多次读出的场景。一个文件经过创建，写入和关闭之后就不会改变。 HDFS优缺点？优点  高容错性  数据自动保">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/hadoop%E7%94%9F%E6%80%81%E4%B9%8B-HDFS.assets/image-20220516200530347.png">
+<meta property="og:image" content="http://example.com/hadoop%E7%94%9F%E6%80%81%E4%B9%8B-HDFS.assets/image-20220517003107413.png">
+<meta property="article:published_time" content="2024-04-05T14:53:22.874Z">
+<meta property="article:modified_time" content="2024-04-05T14:53:22.874Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/hadoop%E7%94%9F%E6%80%81%E4%B9%8B-HDFS.assets/image-20220516200530347.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-hadoop/hadoop生态之-HDFS" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/04/05/hadoop/hadoop%E7%94%9F%E6%80%81%E4%B9%8B-HDFS/" class="article-date">
+  <time class="dt-published" datetime="2024-04-05T14:53:22.874Z" itemprop="datePublished">2024-04-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="HDFS概述"><a href="#HDFS概述" class="headerlink" title="HDFS概述"></a>HDFS概述</h1><h2 id="什么是HDFS？"><a href="#什么是HDFS？" class="headerlink" title="什么是HDFS？"></a>什么是HDFS？</h2><p>​		HDFS（Hadoop Distributed File System）， 它是一个分布式文件系统，用于存储文件，通过目录树来定位文件；其次，它是分布式的，由多台服务器联合起来实现其功能，集群中的服务器有各自的角色。</p>
+<p>​		<em>HDFS的使用场景：适合一次写入，多次读出的场景。一个文件经过创建，写入和关闭之后就不会改变。</em></p>
+<h2 id="HDFS优缺点？"><a href="#HDFS优缺点？" class="headerlink" title="HDFS优缺点？"></a>HDFS优缺点？</h2><p><font color="red" size="4">优点</font></p>
+<ul>
+<li><p>高容错性</p>
+<ul>
+<li><p>数据自动保存多个副本，通过增加副本的形式，提高容错性</p>
+</li>
+<li><p>当副本丢失以后，它可以自动恢复</p>
+</li>
+</ul>
+</li>
+<li><p>适合处理大数据</p>
+<p>  ​	能够处理数据规模达到GB、TB、甚至PB级别的数据；</p>
+<p>  ​	能够处理百万规模以上的文件数量，数量相当之大</p>
+</li>
+<li><p>可构建在廉价机器上，通过多副本机制，提高可靠性</p>
+</li>
+</ul>
+<p><font color="red" size="4">缺点</font></p>
+<ul>
+<li><p>不合适低延时的数据访问， 比如毫秒级的存储数据，是做不到的</p>
+</li>
+<li><p>无法高效对大量小文件进行存储</p>
+<ul>
+<li>大量小文件会占用NameNode大量的内存来存储文件目录和块信息，而NameNode的内存总是有限的。</li>
+<li>小文件寻址时间会超过读取时间，它违反了HDFS的涉及目标</li>
+</ul>
+</li>
+<li><p>不支持并发写入，文件随机修改</p>
+<ul>
+<li><p>一个文件只能有一个写，不允许多个线程同时写</p>
+</li>
+<li><p>仅支持数据append追加，不支持文件的随机修改</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>​		</p>
+<h2 id="HDFS组成架构"><a href="#HDFS组成架构" class="headerlink" title="HDFS组成架构"></a>HDFS组成架构</h2><p>1） NameNode :  Master角色</p>
+<ul>
+<li>管理HDFS的名称空间，</li>
+</ul>
+<ul>
+<li>配置副本策略(副本节点选择 )</li>
+<li>管理数据块（Block）映射信息</li>
+<li>处理客户端读写请求</li>
+</ul>
+<p>2）DataNode： Worker角色</p>
+<ul>
+<li>存储实际的数据块</li>
+<li>执行数据块的读&#x2F;写操作</li>
+</ul>
+<p>3） Client 客户端</p>
+<ul>
+<li>文件切分，文件上传HDFS时，Client将文件切分成一个一个的Block,然后进行上传；</li>
+<li>与NameNode交互，获取文件的位置信息</li>
+<li>与DataNode交互，读取或者写入数据</li>
+<li>Client提供命令来管理HDFS，比如NameNode格式化</li>
+<li>Client可以通过一些命令访问HDFS，比如对HDFS增删查改操作</li>
+</ul>
+<p>4）Secondary NameNode，当NameNode节点挂掉时，它并不能马上替换NameNode并提供服务</p>
+<ul>
+<li>辅助NameNode,分担其工作量，比如定期合并<font color="red">FsImage</font>和<font color="red">Edits</font>，并推送给NameNode;</li>
+<li>在紧急情况下，可以辅助恢复NameNode</li>
+</ul>
+<p><em>Secondary NameNode不是NameNode节点的热备份</em></p>
+<h2 id="HDFS文件块大小"><a href="#HDFS文件块大小" class="headerlink" title="HDFS文件块大小"></a>HDFS文件块大小</h2><p><img src="/hadoop%E7%94%9F%E6%80%81%E4%B9%8B-HDFS.assets/image-20220516200530347.png" alt="image-20220516200530347"></p>
+<h1 id="HDFS的文件读写"><a href="#HDFS的文件读写" class="headerlink" title="HDFS的文件读写"></a>HDFS的文件读写</h1><h2 id="文件写流程"><a href="#文件写流程" class="headerlink" title="文件写流程"></a>文件写流程</h2><p><img src="/hadoop%E7%94%9F%E6%80%81%E4%B9%8B-HDFS.assets/image-20220517003107413.png" alt="image-20220517003107413"></p>
+<p>1）客户端通过Distributed FileSystem模块向NameNode请求上传文件，NameNode收到请求后检查目标文件是否已经存在，父目录是否存在；</p>
+<p>2）NameNode返回响应给客户端，通知是否可以上传文件；</p>
+<p>3）客户端本地对文件切分，按照blocksize大小对文件切分成一个个block块，然后向NameNode请求上传第一个Block；</p>
+<p>4）NameNode按照副本定义的个数，返回相应的DataNode节点地址列表给客户端，假设文件副本数为3， 则NameNode返回3个DataNode节点的地址dn1,dn2,dn3；</p>
+<p>5）客户端通过FSDataOutputStream模块请求上传数据，dn1收到请求会继续调用dn2,然后dn2调用dn3,在这些datanode之间建立通信管道；</p>
+<p>6） Datanode节点按照通信管道中的顺序逐级应答，最终应答给客户端。</p>
+<p>写请求: client -&gt;dn1-dn2-&gt;dn3</p>
+<p>应答请求： dn3-&gt;dn2-&gt;dn1-&gt;client</p>
+<p>7)客户端开始往dn1上传第一个block（数据先从磁盘读取后放到本地内存缓存），以packet为单位发送数据给dn1,dn1收到后再发送给dn2,然后dn2发送给dn3; </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/04/05/hadoop/hadoop%E7%94%9F%E6%80%81%E4%B9%8B-HDFS/" data-id="clumsd6x70009abr73zgoe9w5" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/04/05/hadoop/hadoop%E7%94%9F%E6%80%81%E4%B9%8B-MapReduce/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/04/05/hadoop/hadoop%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/04/05/%E6%95%B0%E4%BB%93%E7%BB%8F%E9%AA%8C/%E9%9D%A2%E8%AF%95%E9%A2%98/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/Zookeeper/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA(HA)/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%BC%96%E7%A8%8B-RDD%E9%AB%98%E9%98%B6/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="数据仓库工具– Hive第一部分 Hive概述1.1 Hive产生的背景  Ｈive是基于Hadoop的一个数据仓库工具，用来将结构化数据文件映射为一张表，并提供类SQL查询功能；　Hive用于解决海量结构化日志的数据统计。       1.2 Hive和RDBM对比          第二部分 Hive安装与配置2.1 Hive安装配置1.1 MySql安装 –  查询是否安装了mariadb,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="数据仓库工具– Hive第一部分 Hive概述1.1 Hive产生的背景  Ｈive是基于Hadoop的一个数据仓库工具，用来将结构化数据文件映射为一张表，并提供类SQL查询功能；　Hive用于解决海量结构化日志的数据统计。       1.2 Hive和RDBM对比          第二部分 Hive安装与配置2.1 Hive安装配置1.1 MySql安装 –  查询是否安装了mariadb,">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/Hive.assets/image-20201217231512201.png">
+<meta property="og:image" content="http://example.com/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/Hive.assets/image-20201217231801729.png">
+<meta property="og:image" content="http://example.com/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/Hive.assets/image-20201217231819410.png">
+<meta property="og:image" content="http://example.com/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/Hive.assets/image-20201220195319776.png">
+<meta property="og:image" content="http://example.com/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/Hive.assets/image-20201220213910932.png">
+<meta property="og:image" content="http://example.com/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/Hive.assets/image-20201220172243180.png">
+<meta property="og:image" content="http://example.com/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/Hive.assets/image-20201220214212555.png">
+<meta property="og:image" content="http://example.com/Hive.assets/example_7_3_1-1616850021849.PNG">
+<meta property="og:image" content="http://example.com/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/Hive.assets/image-20210104224653531.png">
+<meta property="og:image" content="http://example.com/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/Hive.assets/image-20210129234421766.png">
+<meta property="og:image" content="http://example.com/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/Hive.assets/image-20210129234439068.png">
+<meta property="og:image" content="http://example.com/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/Hive.assets/image-20210129234458847.png">
+<meta property="og:image" content="http://example.com/images/image-20230614231128720.png">
+<meta property="og:image" content="http://example.com/images/image-20230614230816473.png">
+<meta property="article:published_time" content="2024-04-05T14:53:22.883Z">
+<meta property="article:modified_time" content="2024-04-05T14:53:22.883Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/Hive.assets/image-20201217231512201.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-hive/Hive基础" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/" class="article-date">
+  <time class="dt-published" datetime="2024-04-05T14:53:22.883Z" itemprop="datePublished">2024-04-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="数据仓库工具–-Hive"><a href="#数据仓库工具–-Hive" class="headerlink" title="数据仓库工具– Hive"></a>数据仓库工具– Hive</h1><h1 id="第一部分-Hive概述"><a href="#第一部分-Hive概述" class="headerlink" title="第一部分 Hive概述"></a>第一部分 Hive概述</h1><h2 id="1-1-Hive产生的背景"><a href="#1-1-Hive产生的背景" class="headerlink" title="1.1 Hive产生的背景"></a>1.1 Hive产生的背景</h2><img src="Hive.assets/image-20201217231512201.png"/>
+
+<p>Ｈive是基于Hadoop的一个数据仓库工具，用来将结构化数据文件映射为一张表，并提供类SQL查询功能；　Hive用于解决海量结构化日志的数据统计。</p>
+<img src="Hive.assets/image-20201217231801729.png"/>
+
+<img src="Hive.assets/image-20201217231819410.png"/>
+
+
+
+<h2 id="1-2-Hive和RDBM对比"><a href="#1-2-Hive和RDBM对比" class="headerlink" title="1.2 Hive和RDBM对比"></a>1.2 Hive和RDBM对比</h2><img src="Hive.assets/image-20201220195319776.png"/>
+
+
+
+
+
+
+
+
+
+<h1 id="第二部分-Hive安装与配置"><a href="#第二部分-Hive安装与配置" class="headerlink" title="第二部分 Hive安装与配置"></a>第二部分 Hive安装与配置</h1><h2 id="2-1-Hive安装配置"><a href="#2-1-Hive安装配置" class="headerlink" title="2.1 Hive安装配置"></a>2.1 Hive安装配置</h2><h3 id="1-1-MySql安装"><a href="#1-1-MySql安装" class="headerlink" title="1.1 MySql安装"></a>1.1 MySql安装</h3><blockquote>
+<p>–  查询是否安装了mariadb,  影响mysql安装</p>
+<p>rpm -aq | grep mariadb    – 查找mariadb</p>
+<p>rpm -e –nodeps mariadb-libs   – 删除mariadb</p>
+<p>– 安装依赖</p>
+<p>yum install perl -y</p>
+<p>yum install net-tools -y</p>
+</blockquote>
+<p>安装MySql</p>
+<img src="Hive.assets/image-20201220213910932.png"/>
+
+<p>启动mysql</p>
+<blockquote>
+<p>systemctl start mysqld</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置mysql的root用户登陆密码</span></span><br><span class="line">mysql -uroot -p</span><br><span class="line">set global validate_password_polocy=0;</span><br><span class="line">set password for &#x27;root&#x27;@&#x27;localhost&#x27;=password(&#x27;12345678&#x27;);</span><br><span class="line">flush privileges;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建hive用户</span></span><br><span class="line">create user &#x27;hive&#x27;@&#x27;%&#x27; identified by &#x27;12345678&#x27;;</span><br><span class="line">grant all on *.* to &#x27;hive&#x27;@&#x27;%&#x27;;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="1-2-Hive安装"><a href="#1-2-Hive安装" class="headerlink" title="1.2 Hive安装"></a>1.2 Hive安装</h3><p>1.2.1 hive配置 hive-site.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> standalone=<span class="string">&quot;no&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;?xml-stylesheet type=<span class="string">&quot;text/xsl&quot;</span> href=<span class="string">&quot;configuration.xsl&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 数据库url --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionURL<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>jdbc:mysql://linux113:3306/hivemetadata?createDatabaseIfNotExist=true<span class="symbol">&amp;amp;</span>useSSL=false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span></span><br><span class="line">      createDatabaseIfExist=true 自动在mysql中创建数据库</span><br><span class="line">      JDBC connect string for a JDBC metastore.</span><br><span class="line">      To use SSL to encrypt/authenticate the connection, provide database-specific SSL flag in the connection URL.</span><br><span class="line">      For example, jdbc:postgresql://myhost/db?ssl=true for postgres database.</span><br><span class="line">    <span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- 数据库驱动 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionDriverName<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>com.mysql.jdbc.Driver<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span>Driver class name for a JDBC metastore<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 用户名 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionUserName<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hive<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span>Username to use against metastore database<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">     <span class="comment">&lt;!-- 密码 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionPassword<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>12345678<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span>password to use against metastore database<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>1.2.2 拷贝<strong>mysql-connector-java-5.1.46.jar</strong> 数据库驱动到$HIVE_HOME&#x2F;lib下</p>
+<p>1.2.3 初始化元数据库</p>
+<p>schematool -dbType mysql -initSchema</p>
+<img src="Hive.assets/image-20201220172243180.png"/>
+
+<p>1.2.4 启动hive</p>
+<img src="Hive.assets/image-20201220214212555.png"/>
+
+
+
+<p>这里启动hive是从Mysql中直接读取元数据信息。后面讲解通过元数据管理服务将元数据信息曝露出去，让其他的服务可以访问到元数据。</p>
+<h1 id="第三部分-数据类型与文件格式"><a href="#第三部分-数据类型与文件格式" class="headerlink" title="第三部分 数据类型与文件格式"></a>第三部分 数据类型与文件格式</h1><table>
+<thead>
+<tr>
+<th>Hive数据类型</th>
+<th>长度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TINYINT</td>
+<td>1byte有符号整数</td>
+</tr>
+<tr>
+<td>SMALLINT</td>
+<td>2byte有符号整数</td>
+</tr>
+<tr>
+<td>INT</td>
+<td>4byte有符号整数</td>
+</tr>
+<tr>
+<td>BIGINT</td>
+<td>8byte有符号整数</td>
+</tr>
+<tr>
+<td>BOOLEAN</td>
+<td>布尔类型</td>
+</tr>
+<tr>
+<td>FLOAT</td>
+<td>单精度浮点</td>
+</tr>
+<tr>
+<td>DOUBLE</td>
+<td>双精度浮点</td>
+</tr>
+<tr>
+<td>STRING</td>
+<td>字符串</td>
+</tr>
+<tr>
+<td>TIMESTAMP</td>
+<td>时间戳</td>
+</tr>
+<tr>
+<td>BINARY</td>
+<td>字节数组</td>
+</tr>
+</tbody></table>
+<p>运算时低精度会向高精度转换。</p>
+<p>使用cast函数可以强制类型转换。</p>
+<h1 id="第四部分-HQL操作之–-DDL命令"><a href="#第四部分-HQL操作之–-DDL命令" class="headerlink" title="第四部分 HQL操作之– DDL命令"></a>第四部分 HQL操作之– DDL命令</h1><h2 id="4-1-数据库操作"><a href="#4-1-数据库操作" class="headerlink" title="4.1 数据库操作"></a>4.1 数据库操作</h2><p><strong>创建数据库</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建一个数据库</span></span><br><span class="line"><span class="keyword">CREATE</span> (DATABASE<span class="operator">|</span>SCHEMA) [IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] databane_name</span><br><span class="line">[COMMENT database_comment]</span><br><span class="line">[LOCATION hdfs_path]  <span class="comment">-- 指定数据库的位置</span></span><br><span class="line">[MANAGEDLOCATION hdfs_path]  </span><br><span class="line">[<span class="keyword">WITH</span> dbproperties (property_name<span class="operator">=</span>property_value,...)];</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除数据库</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 删除一个空数据库</span></span><br><span class="line"><span class="keyword">drop</span> database databasename;</span><br><span class="line"><span class="comment">-- 如果数据库不为空，使用 cascade 强制删除</span></span><br><span class="line"><span class="keyword">drop</span> database databasename cascade;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-2-建表语法"><a href="#4-2-建表语法" class="headerlink" title="4.2 建表语法"></a>4.2 建表语法</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- EXTERNAL 创建外部表，否则创建的是内部表(管理表)。</span></span><br><span class="line"><span class="comment">--    删除内部表时，数据和表的定义同时被删除；</span></span><br><span class="line"><span class="comment">--    删除外部表时，仅仅删除了表的定义，数据保留；</span></span><br><span class="line"><span class="comment">--    在生产环境中，多使用外部表；</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建表语句</span></span><br><span class="line"><span class="keyword">create</span> [<span class="keyword">external</span>] <span class="keyword">table</span> [IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] table_name </span><br><span class="line">[(colName colType [comment <span class="string">&#x27;comment&#x27;</span>], ...)] </span><br><span class="line"><span class="comment">-- 注释说明</span></span><br><span class="line">[comment table_comment]</span><br><span class="line"><span class="comment">-- partition by 对表中数据进行分区，指定表的分区字段</span></span><br><span class="line">[<span class="keyword">partition</span> <span class="keyword">by</span> (colName colType [comment col_comment], ...)]</span><br><span class="line"><span class="comment">-- clustered by 创建分桶表，指定分桶字段</span></span><br><span class="line">[clustered <span class="keyword">BY</span> (colName, colName, ...) </span><br><span class="line"> <span class="comment">-- sorted by 对桶中的一个或多个列排序，较少使用， 对分桶中的数据排序</span></span><br><span class="line">[sorted <span class="keyword">by</span> (col_name [<span class="keyword">ASC</span><span class="operator">|</span><span class="keyword">DESC</span>], ...)] <span class="keyword">into</span> num_buckets buckets]</span><br><span class="line"><span class="comment">-- 数据文件中行格式，如 row format delimited fields terminated by &#x27;\t&#x27;, 表示以&#x27;\t&#x27;分割出每行的字段</span></span><br><span class="line">[<span class="type">row</span> format row_format] </span><br><span class="line"><span class="comment">-- 存储文件类型， stored as SEQUENCEFILE|TEXTFILE|RCFILE。如果文件数据是纯文本，可以使用 STORED AS TEXTFILE（缺省）；如果数据需要压缩，使用 STORED AS SEQUENCEFILE（二进制序列文件）。</span></span><br><span class="line">[stored <span class="keyword">as</span> file_format]</span><br><span class="line"> <span class="comment">-- 数据文件位置</span></span><br><span class="line">[LOCATION hdfs_path]</span><br><span class="line"><span class="comment">-- 定义表的属性</span></span><br><span class="line">[TBLPROPERTIES (property_name<span class="operator">=</span>property_value, ...)]  </span><br><span class="line"><span class="comment">-- 将查询结果一起加载到新建的表中</span></span><br><span class="line">[<span class="keyword">AS</span> select_statement]; </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 复制表结构，但不复制数据</span></span><br><span class="line"><span class="keyword">CREATE</span> [TEMPORARY] [<span class="keyword">EXTERNAL</span>] <span class="keyword">TABLE</span> [IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] </span><br><span class="line">[db_name.]table_name</span><br><span class="line"><span class="keyword">LIKE</span> existing_table_or_view_name</span><br><span class="line">[LOCATION hdfs_path];</span><br></pre></td></tr></table></figure>
+
+
+
+<p>​		建表时可指定 SerDe 。如果没有指定 ROW FORMAT 或者 ROW FORMAT<br>DELIMITED，将会使用默认的 SerDe。建表时还需要为表指定列，在指定列的<br>同时也会指定自定义的 SerDe。Hive通过 SerDe 确定表的具体的列的数据</p>
+<h2 id="4-3-内部表-外部表"><a href="#4-3-内部表-外部表" class="headerlink" title="4.3 内部表 &amp; 外部表"></a>4.3 内部表 &amp; 外部表</h2><p>​		在创建表的时候，可指定表的类型。表有两种类型，分别是内部表(管理表)、外部表。默认情况下，创建内部表。如果要创建外部表，需要使用关键字 external在建表时定义。</p>
+<ul>
+<li>在删除内表时，表的定义(元数据) 和 数据 同时被删除</li>
+<li>在删除外部表时，仅删除表的定义，数据被保留</li>
+<li>在生产环境中，多使用外部表</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 内部表转外部表</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t1 <span class="keyword">set</span> tblproperties(<span class="string">&#x27;EXTERNAL&#x27;</span><span class="operator">=</span><span class="string">&#x27;TRUE&#x27;</span>);</span><br><span class="line"><span class="comment">-- 查询表信息，是否转换成功</span></span><br><span class="line"><span class="keyword">desc</span> formatted t1;</span><br><span class="line"><span class="comment">-- 外部表转内部表。EXTERNAL 大写，false 不区分大小</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t1 <span class="keyword">set</span> tblproperties(<span class="string">&#x27;EXTERNAL&#x27;</span><span class="operator">=</span><span class="string">&#x27;FALSE&#x27;</span>);</span><br><span class="line"><span class="comment">-- 查询表信息，是否转换成功</span></span><br><span class="line"><span class="keyword">desc</span> formatted t1;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-4-分区表"><a href="#4-4-分区表" class="headerlink" title="4.4 分区表"></a>4.4 分区表</h2><p>​		Hive在执行查询时，一般会扫描整个表的数据。由于表的数据量大，全表扫描消耗时间长、效率低。而有时候，查询只需要扫描表中的一部分数据即可，Hive引入了分区表的概念，将表的数据存储在不同的子目录中，每一个子目录对应一个分区。只查询部分分区数据时，可避免全表扫描，提高查询效率。在实际中，通常根据时间、地区等信息进行分区。</p>
+<p><strong>建分区表，加载数据</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> if <span class="keyword">not</span> <span class="keyword">exists</span> t3(</span><br><span class="line">    id      <span class="type">int</span></span><br><span class="line">   ,name    string</span><br><span class="line">   ,hobby   <span class="keyword">array</span><span class="operator">&lt;</span>string<span class="operator">&gt;</span></span><br><span class="line">   ,addr    map<span class="operator">&lt;</span>String,string<span class="operator">&gt;</span></span><br><span class="line">)</span><br><span class="line">partitioned <span class="keyword">by</span> (dt string)</span><br><span class="line"><span class="type">row</span> format delimited</span><br><span class="line">fields terminated <span class="keyword">by</span> <span class="string">&#x27;;&#x27;</span></span><br><span class="line">collection items terminated <span class="keyword">by</span> <span class="string">&#x27;,&#x27;</span></span><br><span class="line">map keys terminated <span class="keyword">by</span> <span class="string">&#x27;:&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 加载数据</span></span><br><span class="line">load data <span class="keyword">local</span> inpath &quot;/home/hadoop/data/t1.dat&quot; <span class="keyword">into</span> <span class="keyword">table</span> t3 <span class="keyword">partition</span>(dt<span class="operator">=</span>&quot;2020-06-01&quot;);</span><br><span class="line">load data <span class="keyword">local</span> inpath &quot;/home/hadoop/data/t1.dat&quot; <span class="keyword">into</span> <span class="keyword">table</span> t3 <span class="keyword">partition</span>(dt<span class="operator">=</span>&quot;2020-06-02&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>分区表中的分区字段不在实际数据中存储，但是查询时可以能够被查询到。可认为是伪字段。</p>
+<p><strong>分区操作</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 增加一个分区，不加载数据</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t3 <span class="keyword">add</span> <span class="keyword">partition</span>(dt<span class="operator">=</span><span class="string">&#x27;2020-06-03&#x27;</span>);</span><br><span class="line"><span class="comment">-- 增加多个分区，不加载数据</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t3 <span class="keyword">add</span> <span class="keyword">partition</span>(dt<span class="operator">=</span><span class="string">&#x27;2020-06-05&#x27;</span>) <span class="keyword">partition</span>(dt<span class="operator">=</span><span class="string">&#x27;2020-06-06&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 增加多个分区，加载数据，指定每个分区数据位置</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t3 <span class="keyword">add</span> </span><br><span class="line"><span class="keyword">partition</span>(dt<span class="operator">=</span><span class="string">&#x27;2020-06-07&#x27;</span>) location <span class="string">&#x27;/user/hive/warehouse/mydb.db/t3/dt=2020-06-07&#x27;</span></span><br><span class="line"><span class="keyword">partition</span>(dt<span class="operator">=</span><span class="string">&#x27;2020-06-08&#x27;</span>) location <span class="string">&#x27;/user/hive/warehouse/mydb.db/t3/dt=2020-06-08&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 修改分区数据位置</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t3 <span class="keyword">partition</span>(dt<span class="operator">=</span><span class="string">&#x27;2020-06-01&#x27;</span>) <span class="keyword">set</span> location<span class="string">&#x27;/user/hive/warehouse/t3/dt=2020-06-03&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除分区， 多个分区用逗号隔开</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t3 <span class="keyword">drop</span> <span class="keyword">partition</span>(dt<span class="operator">=</span><span class="string">&#x27;2020-06-03&#x27;</span>), <span class="keyword">partition</span>(dt<span class="operator">=</span><span class="string">&#x27;2020-06-04&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查看分区</span></span><br><span class="line"><span class="keyword">show</span> partiotions tablename;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-5-分桶表"><a href="#4-5-分桶表" class="headerlink" title="4.5 分桶表"></a>4.5 分桶表</h2><p>当单个的分区或者表的数据量过大，分区不能更细粒度的划分数据，就需要使用分桶技术将数据划分成更细的粒度。将数据按照指定的字段进行分成多个桶中去，即将数据按照字段进行划分，数据按照字段划分到多个文件当中去。</p>
+<p>分桶的原理：</p>
+<ul>
+<li>MR中：key.hashCode % reductTask</li>
+<li>Hive中：分桶字段.hashCode % 分桶个数</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建分桶表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> course(</span><br><span class="line">    id <span class="type">int</span>,</span><br><span class="line">    name string,</span><br><span class="line">    score <span class="type">int</span></span><br><span class="line">)</span><br><span class="line">clustered <span class="keyword">by</span> (id) <span class="keyword">into</span> <span class="number">3</span> buckets</span><br><span class="line"><span class="type">row</span> format delimited fields terminated <span class="keyword">by</span> &quot;\t&quot;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>当将查询结果数据加载到分桶表中时，数据结果会存储在多个文件中，文件个数就对应者分桶数目。</p>
+<h1 id="第五部分-HQL操作之–数据操作"><a href="#第五部分-HQL操作之–数据操作" class="headerlink" title="第五部分 HQL操作之–数据操作"></a>第五部分 HQL操作之–数据操作</h1><h2 id="1-数据导入"><a href="#1-数据导入" class="headerlink" title="1. 数据导入"></a>1. 数据导入</h2><p><strong>加载数据</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">LOAD DATA [<span class="keyword">LOCAL</span>] INPATH <span class="string">&#x27;filepath&#x27;</span> </span><br><span class="line">[OVERWRITE] <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename [<span class="keyword">PARTITION</span> (partcol1<span class="operator">=</span>val1, </span><br><span class="line">partcol2<span class="operator">=</span>val2 ...)]</span><br><span class="line"></span><br><span class="line"><span class="comment">-- LOAD DATA LOCAL filepath 从本地文件系统加载数据到Hive表中,本地文件会拷贝到Hive表指定的位置, 这里的本地文件必须实在hive server服务器上，如果是客户端上的数据，则不行。</span></span><br><span class="line"><span class="comment">-- LOAD DATA hdfs_filepath 从HDFS加载数据到Hive表中。HDFS文件移动到Hive表指定的位置</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- INPATH：加载数据的路径</span></span><br><span class="line"><span class="comment">-- OVERWRITE：覆盖表中已有数据；否则表示追加数据</span></span><br><span class="line"><span class="comment">-- PARTITION：将数据加载到指定的分区</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>插入数据</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">Table</span> tab(</span><br><span class="line">	id <span class="type">INT</span>,</span><br><span class="line">    name string,</span><br><span class="line">    area string</span><br><span class="line">)</span><br><span class="line">partitioned <span class="keyword">by</span> (<span class="keyword">month</span> string)</span><br><span class="line"><span class="type">row</span> format delimited fields terminated <span class="keyword">by</span> <span class="string">&#x27;,&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 插入数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">table</span> tab <span class="keyword">partition</span>(<span class="keyword">month</span><span class="operator">=</span><span class="string">&#x27;202101&#x27;</span>)</span><br><span class="line"><span class="keyword">values</span>(<span class="number">5</span>,<span class="string">&#x27;wangwu&#x27;</span>,<span class="string">&#x27;BJ&#x27;</span>),(<span class="number">4</span>,<span class="string">&#x27;lisi&#x27;</span>,<span class="string">&#x27;SH&#x27;</span>)(<span class="number">3</span>,<span class="string">&#x27;zhangshan&#x27;</span>,<span class="string">&#x27;SZ&#x27;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 多表插入，一次扫描源表，根据条件将数据插入到不同的目标表中</span></span><br><span class="line"><span class="keyword">from</span> tab</span><br><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> taba <span class="keyword">partition</span>(<span class="keyword">month</span><span class="operator">=</span><span class="string">&#x27;202101&#x27;</span>)</span><br><span class="line"><span class="keyword">select</span> id,name,area <span class="keyword">where</span> <span class="keyword">month</span> <span class="operator">=</span> <span class="string">&#x27;202101&#x27;</span></span><br><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> tabb <span class="keyword">partition</span>(<span class="keyword">month</span><span class="operator">=</span><span class="string">&#x27;202102&#x27;</span>)</span><br><span class="line"><span class="keyword">select</span> id,name,area <span class="keyword">where</span> <span class="keyword">month</span><span class="operator">=</span> <span class="string">&#x27;202102&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="2-数据导出"><a href="#2-数据导出" class="headerlink" title="2. 数据导出"></a>2. 数据导出</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 将查询结果导出到本地</span></span><br><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">local</span> directory <span class="string">&#x27;/home/hadoop/data/tabC&#x27;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tabC;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 将查询结果格式化输出到本地</span></span><br><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">local</span> directory <span class="string">&#x27;/home/hadoop/data/tabC2&#x27;</span><span class="type">row</span> format delimited fields terminated <span class="keyword">by</span> <span class="string">&#x27; &#x27;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tabC;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 将查询结果导出到HDFS</span></span><br><span class="line"><span class="keyword">insert</span> overwrite directory <span class="string">&#x27;/user/hadoop/data/tabC3&#x27;</span> <span class="type">row</span> format delimited fields terminated <span class="keyword">by</span> <span class="string">&#x27; &#x27;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tabC;</span><br></pre></td></tr></table></figure>
+
+<p>注意: 有的情况下导出数据任务在集群中执行不正常，这时可以考虑将查询的结果数据加载到一张表中，通过定义好表的存储文件格式为文本文件的方式得到最终的数据文件。</p>
+<h1 id="第六部分-HQL操作之–DQL命令"><a href="#第六部分-HQL操作之–DQL命令" class="headerlink" title="第六部分 HQL操作之–DQL命令"></a>第六部分 HQL操作之–DQL命令</h1><p>查询语法</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> [<span class="keyword">ALL</span> <span class="operator">|</span> <span class="keyword">DISTINCT</span>] select_expr, select_expr, ...</span><br><span class="line">  <span class="keyword">FROM</span> table_reference</span><br><span class="line">  [<span class="keyword">WHERE</span> where_condition]</span><br><span class="line">  [<span class="keyword">GROUP</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">  [<span class="keyword">ORDER</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">  [CLUSTER <span class="keyword">BY</span> col_list <span class="operator">|</span> [DISTRIBUTE <span class="keyword">BY</span> col_list] [SORT <span class="keyword">BY</span> </span><br><span class="line">col_list]]</span><br><span class="line"> [LIMIT [<span class="keyword">offset</span>,] <span class="keyword">rows</span>]</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-1-使用视图降低查询复杂度"><a href="#6-1-使用视图降低查询复杂度" class="headerlink" title="6.1 使用视图降低查询复杂度"></a>6.1 使用视图降低查询复杂度</h2><p>当查询变得长或复杂的时候，通过使用视图将这个查询语句分割成多个小的，更可控的片段可以降低复杂度。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> (</span><br><span class="line">	<span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> people <span class="keyword">JOIN</span> cart</span><br><span class="line">    <span class="keyword">ON</span> (cart.people_id <span class="operator">=</span> people.id) <span class="keyword">WHERE</span> firstname <span class="operator">=</span> <span class="string">&#x27;john&#x27;</span></span><br><span class="line">) a <span class="keyword">SELECT</span> a.lastname <span class="keyword">WHERE</span> a.id <span class="operator">=</span> <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+<p>下面这个例子中:</p>
+<p>嵌套子查询变成了一个视图:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> shorter_join <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> people <span class="keyword">JOIN</span> cart </span><br><span class="line"><span class="keyword">ON</span> (cart.people_id <span class="operator">=</span> people.id) <span class="keyword">WHERE</span> firstname <span class="operator">=</span> <span class="string">&#x27;join&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这样就可以像操作表一样来操作这个视图了。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> lastname <span class="keyword">FROM</span> shorter_join <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="6-2-使用视图来限制基于条件过滤的数据"><a href="#6-2-使用视图来限制基于条件过滤的数据" class="headerlink" title="6.2 使用视图来限制基于条件过滤的数据"></a>6.2 使用视图来限制基于条件过滤的数据</h2><p>对于视图来说的一个常见场景就是基于一个或多个列的值来限制输出结果。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> userinfo (</span><br><span class="line">	firstname string, lastname string, ssn string, password string</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> safer_userinfo <span class="keyword">AS</span> </span><br><span class="line"><span class="keyword">SELECT</span> firstname,lastname <span class="keyword">FROM</span> userinfo;</span><br></pre></td></tr></table></figure>
+
+<p>这样将视图提供出去，可以避免其他敏感信息被访问到。</p>
+<h2 id="6-3-动态分区中的视图和map类型"><a href="#6-3-动态分区中的视图和map类型" class="headerlink" title="6.3 动态分区中的视图和map类型"></a>6.3 动态分区中的视图和map类型</h2><p>之前介绍过Hive支持的array, map, struct数据类型。</p>
+<p><img src="/Hive.assets/example_7_3_1-1616850021849.PNG" alt="example_7_3_1"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> dynamictable(cols map<span class="operator">&lt;</span>string,string<span class="operator">&gt;</span>)</span><br><span class="line"><span class="type">ROW</span> FORMAT DELIMITED</span><br><span class="line">	FIELDS TERMINATED <span class="keyword">BY</span> <span class="string">&#x27;\004&#x27;</span></span><br><span class="line">	COLLECTION ITEMS TERMINATED <span class="keyword">BY</span> <span class="string">&#x27;\001&#x27;</span></span><br><span class="line">	MAP KEYS TERMINATED <span class="keyword">BY</span> <span class="string">&#x27;\002&#x27;</span></span><br><span class="line">STORED <span class="keyword">AS</span> TEXTFILE;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h1 id="第七部分-函数"><a href="#第七部分-函数" class="headerlink" title="第七部分 函数"></a>第七部分 函数</h1><h2 id="7-1-系统内置函数"><a href="#7-1-系统内置函数" class="headerlink" title="7.1 系统内置函数"></a>7.1 系统内置函数</h2><p><strong>查看系统自带函数</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查看系统自带函数</span></span><br><span class="line"><span class="keyword">show</span> functions;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 显示自带函数的用法</span></span><br><span class="line"><span class="keyword">desc</span> <span class="keyword">function</span> upper;</span><br><span class="line"><span class="keyword">desc</span> <span class="keyword">function</span> extended upper;</span><br></pre></td></tr></table></figure>
+
+<p><strong>日期函数</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 当前前日期</span></span><br><span class="line"><span class="keyword">select</span> <span class="built_in">current_date</span>;</span><br><span class="line"><span class="keyword">select</span> unix_timestamp();</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 建议使用current_timestamp，有没有括号都可以</span></span><br><span class="line"><span class="keyword">select</span> <span class="built_in">current_timestamp</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 时间戳转日期</span></span><br><span class="line"><span class="keyword">select</span> from_unixtime(<span class="number">1505456567</span>); </span><br><span class="line"><span class="keyword">select</span> from_unixtime(<span class="number">1505456567</span>, <span class="string">&#x27;yyyyMMdd&#x27;</span>); </span><br><span class="line"><span class="keyword">select</span> from_unixtime(<span class="number">1505456567</span>, <span class="string">&#x27;yyyy-MM-dd HH:mm:ss&#x27;</span>); </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 日期转时间戳</span></span><br><span class="line"><span class="keyword">select</span> unix_timestamp(<span class="string">&#x27;2019-09-15 14:23:00&#x27;</span>); </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 计算时间差</span></span><br><span class="line"><span class="keyword">select</span> datediff(<span class="string">&#x27;2020-04-18&#x27;</span>,<span class="string">&#x27;2019-11-21&#x27;</span>);</span><br><span class="line"><span class="keyword">select</span> datediff(<span class="string">&#x27;2019-11-21&#x27;</span>, <span class="string">&#x27;2020-04-18&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查询当月第几天 </span></span><br><span class="line"><span class="keyword">select</span> dayofmonth(<span class="built_in">current_date</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 计算月末:</span></span><br><span class="line"><span class="keyword">select</span> last_day(<span class="built_in">current_date</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 当月第1天: </span></span><br><span class="line"><span class="keyword">select</span> date_sub(<span class="built_in">current_date</span>, dayofmonth(<span class="built_in">current_date</span>)<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 下个月第1天:</span></span><br><span class="line"><span class="keyword">select</span> add_months(date_sub(<span class="built_in">current_date</span>, dayofmonth(<span class="built_in">current_date</span>)<span class="number">-1</span>), <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 字符串转时间（字符串必须为：yyyy-MM-dd格式）</span></span><br><span class="line"><span class="keyword">select</span> to_date(<span class="string">&#x27;2020-01-01&#x27;</span>);</span><br><span class="line"><span class="keyword">select</span> to_date(<span class="string">&#x27;2020-01-01 12:12:12&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 日期、时间戳、字符串类型格式化输出标准时间格式</span></span><br><span class="line"><span class="keyword">select</span> date_format(<span class="built_in">current_timestamp</span>(), <span class="string">&#x27;yyyy-MM-dd HH:mm:ss&#x27;</span>);</span><br><span class="line"><span class="keyword">select</span> date_format(<span class="built_in">current_date</span>(), <span class="string">&#x27;yyyyMMdd&#x27;</span>);</span><br><span class="line"><span class="keyword">select</span> date_format(<span class="string">&#x27;2020-06-01&#x27;</span>, <span class="string">&#x27;yyyy-MM-dd HH:mm:ss&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 计算emp表中，每个人的工龄</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span>, round(datediff(<span class="built_in">current_date</span>, hiredate)<span class="operator">/</span><span class="number">365</span>,<span class="number">1</span>) workingyears <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>字符串函数</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 转小写。lower</span></span><br><span class="line"><span class="keyword">select</span> <span class="built_in">lower</span>(&quot;HELLO WORLD&quot;);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 转大写。upper</span></span><br><span class="line"><span class="keyword">select</span> <span class="built_in">lower</span>(ename), ename <span class="keyword">from</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 求字符串长度。length</span></span><br><span class="line"><span class="keyword">select</span> length(ename), ename <span class="keyword">from</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 字符串拼接。 concat / ||</span></span><br><span class="line"><span class="keyword">select</span> empno <span class="operator">||</span> &quot; &quot; <span class="operator">||</span>ename idname <span class="keyword">from</span> emp;</span><br><span class="line"><span class="keyword">select</span> concat(empno, &quot; &quot; ,ename) idname <span class="keyword">from</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 指定分隔符。concat_ws(separator, [string | array(string)]+)</span></span><br><span class="line"><span class="keyword">SELECT</span> concat_ws(<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;www&#x27;</span>, <span class="keyword">array</span>(<span class="string">&#x27;lagou&#x27;</span>, <span class="string">&#x27;com&#x27;</span>));</span><br><span class="line"><span class="keyword">select</span> concat_ws(&quot; &quot;, ename, job) <span class="keyword">from</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 求子串。substr</span></span><br><span class="line"><span class="keyword">SELECT</span> substr(<span class="string">&#x27;www.lagou.com&#x27;</span>, <span class="number">5</span>);</span><br><span class="line"><span class="keyword">SELECT</span> substr(<span class="string">&#x27;www.lagou.com&#x27;</span>, <span class="number">-5</span>);</span><br><span class="line"><span class="keyword">SELECT</span> substr(<span class="string">&#x27;www.lagou.com&#x27;</span>, <span class="number">5</span>, <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 字符串切分。split，注意 &#x27;.&#x27; 要转义</span></span><br><span class="line"><span class="keyword">select</span> split(&quot;www.lagou.com&quot;, &quot;\\.&quot;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>数学函数</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 四舍五入。round</span></span><br><span class="line"><span class="keyword">select</span> round(<span class="number">314.15926</span>);</span><br><span class="line"><span class="keyword">select</span> round(<span class="number">314.15926</span>, <span class="number">2</span>);</span><br><span class="line"><span class="keyword">select</span> round(<span class="number">314.15926</span>, <span class="number">-2</span>);</span><br><span class="line"><span class="comment">-- 向上取整。ceil</span></span><br><span class="line"><span class="keyword">select</span> <span class="built_in">ceil</span>(<span class="number">3.1415926</span>);</span><br><span class="line"><span class="comment">-- 向下取整。floor </span></span><br><span class="line"><span class="keyword">select</span> <span class="built_in">floor</span>(<span class="number">3.1415926</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>JSON格式处理</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 使用get_json_object</span></span><br><span class="line"><span class="keyword">select</span> get_json_object(<span class="string">&#x27;&#123;&quot;movie&quot;:&quot;594&quot;,&quot;rate&quot;:&quot;4&quot;,&quot;timeStamp&quot;:&quot;978302268&quot;,&quot;uid&quot;:&quot;1&quot;&#125;&#x27;</span>,<span class="string">&#x27;$.movie&#x27;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> b.b_movie,b.b_rate,b.b_timeStamp,b.b_uid <span class="keyword">from</span> json a <span class="keyword">lateral</span> <span class="keyword">view</span> json_tuple(a.data,<span class="string">&#x27;movie&#x27;</span>,<span class="string">&#x27;rate&#x27;</span>,<span class="string">&#x27;timeStamp&#x27;</span>,<span class="string">&#x27;uid&#x27;</span>) b <span class="keyword">as</span> b_movie,b_rate,b_timeStamp,b_uid;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p><strong>条件函数</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- if (boolean testCondition, T valueTrue, T valueFalseOrNull)</span></span><br><span class="line"><span class="comment">-- 判断薪资小于1500，1500~3000，3000+</span></span><br><span class="line"><span class="keyword">select</span> sal, if (sal<span class="operator">&lt;</span><span class="number">1500</span>, <span class="number">1</span>, if (sal <span class="operator">&lt;</span> <span class="number">3000</span>, <span class="number">2</span>, <span class="number">3</span>)) <span class="keyword">from</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 将emp表的员工工资等级分类：0-1500、1500-3000、3000以上</span></span><br><span class="line"><span class="keyword">select</span> sal, if (sal<span class="operator">&lt;=</span><span class="number">1500</span>, <span class="number">1</span>, if (sal <span class="operator">&lt;=</span> <span class="number">3000</span>, <span class="number">2</span>, <span class="number">3</span>)) <span class="keyword">from</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- CASE WHEN a THEN b [WHEN c THEN d]* [ELSE e] END</span></span><br><span class="line"><span class="comment">-- 复杂条件用 case when 更直观</span></span><br><span class="line"><span class="keyword">select</span> sal, <span class="keyword">case</span> <span class="keyword">when</span> sal<span class="operator">&lt;=</span><span class="number">1500</span> <span class="keyword">then</span> <span class="number">1</span></span><br><span class="line">                 <span class="keyword">when</span> sal<span class="operator">&lt;=</span><span class="number">3000</span> <span class="keyword">then</span> <span class="number">2</span></span><br><span class="line">                 <span class="keyword">else</span> <span class="number">3</span> <span class="keyword">end</span> sallevel </span><br><span class="line">                 <span class="keyword">from</span> emp;</span><br><span class="line">                 </span><br><span class="line"><span class="comment">-- 以下语句等价</span></span><br><span class="line"><span class="keyword">select</span> ename, deptno, </span><br><span class="line">       <span class="keyword">case</span> deptno <span class="keyword">when</span> <span class="number">10</span> <span class="keyword">then</span> <span class="string">&#x27;accounting&#x27;</span></span><br><span class="line">                   <span class="keyword">when</span> <span class="number">20</span> <span class="keyword">then</span> <span class="string">&#x27;research&#x27;</span></span><br><span class="line">                   <span class="keyword">when</span> <span class="number">30</span> <span class="keyword">then</span> <span class="string">&#x27;sales&#x27;</span></span><br><span class="line">                   <span class="keyword">else</span> <span class="string">&#x27;unknown&#x27;</span> <span class="keyword">end</span> deptname</span><br><span class="line">  <span class="keyword">from</span> emp;</span><br><span class="line"><span class="comment">-- 字段可以写在when子句中</span></span><br><span class="line"><span class="keyword">select</span> ename, deptno, </span><br><span class="line">       <span class="keyword">case</span> <span class="keyword">when</span> deptno<span class="operator">=</span><span class="number">10</span> <span class="keyword">then</span> <span class="string">&#x27;accounting&#x27;</span></span><br><span class="line">            <span class="keyword">when</span> deptno<span class="operator">=</span><span class="number">20</span> <span class="keyword">then</span> <span class="string">&#x27;research&#x27;</span></span><br><span class="line">            <span class="keyword">when</span> deptno<span class="operator">=</span><span class="number">30</span> <span class="keyword">then</span> <span class="string">&#x27;sales&#x27;</span></span><br><span class="line">            <span class="keyword">else</span> <span class="string">&#x27;unknown&#x27;</span> <span class="keyword">end</span> deptname</span><br><span class="line">  <span class="keyword">from</span> emp; </span><br><span class="line">  </span><br><span class="line"><span class="comment">-- COALESCE(T v1, T v2, ...)。返回参数中的第一个非空值；如果所有值都为NULL，那么返回NULL</span></span><br><span class="line"><span class="keyword">select</span> sal, <span class="built_in">coalesce</span>(comm, <span class="number">0</span>) <span class="keyword">from</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- isnull(a) isnotnull(a)</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> emp <span class="keyword">where</span> isnull(comm);</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> emp <span class="keyword">where</span> isnotnull(comm);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- nvl(T value, T default_value)</span></span><br><span class="line"><span class="keyword">select</span> empno, ename, job, mgr, hiredate, deptno, sal <span class="operator">+</span> nvl(comm,<span class="number">0</span>) sumsal <span class="keyword">from</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- nullif(x, y) 相等为空，否则为a</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">nullif</span>(&quot;b&quot;, &quot;b&quot;), <span class="built_in">nullif</span>(&quot;b&quot;, &quot;a&quot;);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>UDTF函数</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- explode，炸裂函数</span></span><br><span class="line"><span class="comment">-- 就是将一行中复杂的 array 或者 map 结构拆分成多行</span></span><br><span class="line"><span class="keyword">select</span> explode(<span class="keyword">array</span>(<span class="string">&#x27;A&#x27;</span>,<span class="string">&#x27;B&#x27;</span>,<span class="string">&#x27;C&#x27;</span>)) <span class="keyword">as</span> col;</span><br><span class="line"><span class="keyword">select</span> explode(map(<span class="string">&#x27;a&#x27;</span>, <span class="number">8</span>, <span class="string">&#x27;b&#x27;</span>, <span class="number">88</span>, <span class="string">&#x27;c&#x27;</span>, <span class="number">888</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">-- explode函数不能和select子句中的其他列放一起使用</span></span><br><span class="line"><span class="comment">-- SELECT pageid, explode(adid_list) AS myCol 不支持</span></span><br><span class="line"><span class="comment">-- SELECT explode(explode(adid_list)) AS myCol 不支持</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 如果要实现使用explod函数拆分array或map类型同时还要能与其他字段一起，那么需要使用lateral view 关键字</span></span><br><span class="line">lateralView: <span class="keyword">LATERAL</span> <span class="keyword">VIEW</span> udtf(expression) tableAlias <span class="keyword">AS</span> columnAlias </span><br><span class="line">(<span class="string">&#x27;,&#x27;</span> columnAlias)<span class="operator">*</span> fromClause: <span class="keyword">FROM</span> baseTable (lateralView)<span class="operator">*</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>案例1</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 数据(uid tags)：</span></span><br><span class="line"><span class="number">1</span> <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span></span><br><span class="line"><span class="number">2</span> <span class="number">2</span>,<span class="number">3</span></span><br><span class="line"><span class="number">3</span> <span class="number">1</span>,<span class="number">2</span></span><br><span class="line"><span class="comment">--编写sql,实现如下结果：</span></span><br><span class="line"><span class="number">1</span> <span class="number">1</span></span><br><span class="line"><span class="number">1</span> <span class="number">2</span></span><br><span class="line"><span class="number">1</span> <span class="number">3</span></span><br><span class="line"><span class="number">2</span> <span class="number">2</span></span><br><span class="line"><span class="number">2</span> <span class="number">3</span></span><br><span class="line"><span class="number">3</span> <span class="number">1</span></span><br><span class="line"><span class="number">3</span> <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 建表加载数据</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> market(</span><br><span class="line">    id <span class="type">int</span>,</span><br><span class="line">    storage string,</span><br><span class="line">    allocation string,</span><br><span class="line">    outdt string</span><br><span class="line">)<span class="type">row</span> format delimited fields terminated <span class="keyword">by</span> <span class="string">&#x27;\t&#x27;</span>;</span><br><span class="line"></span><br><span class="line">load data <span class="keyword">local</span> inpath <span class="string">&#x27;/hivedata/market.txt&#x27;</span> <span class="keyword">into</span> <span class="keyword">table</span> market;</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> uid, tag <span class="keyword">from</span> t1 <span class="keyword">lateral</span> <span class="keyword">view</span> explode(split(tags,&quot;,&quot;)) t2 <span class="keyword">as</span> tag;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>案例2</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 数据准备</span></span><br><span class="line">lisi<span class="operator">|</span>Chinese:<span class="number">90</span>,Math:<span class="number">80</span>,English:<span class="number">70</span></span><br><span class="line">wangwu<span class="operator">|</span>Chinese:<span class="number">88</span>,Math:<span class="number">90</span>,English:<span class="number">96</span></span><br><span class="line">maliu<span class="operator">|</span>Chinese:<span class="number">99</span>,Math:<span class="number">65</span>,English:<span class="number">60</span></span><br><span class="line"><span class="comment">-- 创建表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> studscore(</span><br><span class="line">   name string</span><br><span class="line">  ,score map<span class="operator">&lt;</span>String,string<span class="operator">&gt;</span>)</span><br><span class="line"><span class="type">row</span> format delimited</span><br><span class="line">fields terminated <span class="keyword">by</span> <span class="string">&#x27;|&#x27;</span></span><br><span class="line">collection items terminated <span class="keyword">by</span> <span class="string">&#x27;,&#x27;</span></span><br><span class="line">map keys terminated <span class="keyword">by</span> <span class="string">&#x27;:&#x27;</span>;</span><br><span class="line"><span class="comment">-- 加载数据</span></span><br><span class="line">load data <span class="keyword">local</span> inpath <span class="string">&#x27;/home/hadoop/data/score.dat&#x27;</span> overwrite </span><br><span class="line"><span class="keyword">into</span> <span class="keyword">table</span> studscore;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 需求：找到每个学员的最好成绩</span></span><br><span class="line"><span class="comment">-- 第一步，使用 explode 函数将map结构拆分为多行</span></span><br><span class="line"><span class="keyword">select</span> explode(score) <span class="keyword">as</span> (subject, socre) <span class="keyword">from</span> studscore;</span><br><span class="line"><span class="comment">--但是这里缺少了学员姓名，加上学员姓名后出错。下面的语句有是错的</span></span><br><span class="line"><span class="keyword">select</span> name, explode(score) <span class="keyword">as</span> (subject, socre) <span class="keyword">from</span> studscore;</span><br><span class="line"><span class="comment">-- 第二步：explode常与 lateral view 函数联用，这两个函数结合在一起能关联其</span></span><br><span class="line">他字段</span><br><span class="line"><span class="keyword">select</span> name, subject, score1 <span class="keyword">as</span> score <span class="keyword">from</span> studscore</span><br><span class="line"><span class="keyword">lateral</span> <span class="keyword">view</span> explode(score) t1 <span class="keyword">as</span> subject, score1;</span><br><span class="line"><span class="comment">-- 第三步：找到每个学员的最好成绩</span></span><br><span class="line"><span class="keyword">select</span> name, <span class="built_in">max</span>(mark) maxscore</span><br><span class="line">  <span class="keyword">from</span> (<span class="keyword">select</span> name, subject, mark</span><br><span class="line">          <span class="keyword">from</span> studscore <span class="keyword">lateral</span> <span class="keyword">view</span> explode(score) t1 <span class="keyword">as</span> </span><br><span class="line">subject, mark) t1</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> name;</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tmp <span class="keyword">as</span> (</span><br><span class="line"><span class="keyword">select</span> name, subject, mark</span><br><span class="line">  <span class="keyword">from</span> studscore <span class="keyword">lateral</span> <span class="keyword">view</span> explode(score) t1 <span class="keyword">as</span> subject, mark</span><br><span class="line">)</span><br><span class="line"><span class="keyword">select</span> name, <span class="built_in">max</span>(mark) maxscore</span><br><span class="line">  <span class="keyword">from</span> tmp</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> name;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="7-2-窗口函数"><a href="#7-2-窗口函数" class="headerlink" title="7.2 窗口函数"></a>7.2 窗口函数</h2><p>​		窗口函数又名开窗函数，属于分析函数的一种。用于解决复杂报表统计需求的功能强大的函数，很多场景都需要用到。窗口函数用于计算基于组的某种聚合值，它和<br>聚合函数的不同之处是：<strong>对于每个组返回多行</strong>，而聚合函数对于每个组只返回一行.窗口函数指定了分析函数工作的数据窗口大小，这个数据窗口大小可能会随着行的<br>变化而变化。</p>
+<h3 id="over关键字"><a href="#over关键字" class="headerlink" title="over关键字"></a>over关键字</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查询emp表工资总和</span></span><br><span class="line"><span class="keyword">select</span> <span class="built_in">sum</span>(sal) <span class="keyword">from</span> emp;</span><br><span class="line"><span class="comment">-- 不使用窗口函数，有语法错误</span></span><br><span class="line"><span class="keyword">select</span> ename, sal, <span class="built_in">sum</span>(sal) salsum <span class="keyword">from</span> emp;</span><br><span class="line"><span class="comment">-- 使用窗口函数，查询员工姓名、薪水、薪水总和</span></span><br><span class="line"><span class="comment">-- sum(sal) over() 是作为一个整体，后面使用时也不能使用别名</span></span><br><span class="line"><span class="keyword">select</span> ename, sal, <span class="built_in">sum</span>(sal) <span class="keyword">over</span>() salsum, concat(round(sal <span class="operator">/</span> <span class="built_in">sum</span>(sal) <span class="keyword">over</span>()<span class="operator">*</span><span class="number">100</span>, <span class="number">1</span>) <span class="operator">||</span> <span class="string">&#x27;%&#x27;</span>) ratiosal <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+
+<p>注意：窗口函数是针对每一行数据的；如果over中没有参数，默认的是全部结果集；</p>
+<h3 id="partition-by-子句"><a href="#partition-by-子句" class="headerlink" title="partition by 子句"></a>partition by 子句</h3><p>在over窗口中进行分区，对某一列进行分区统计，窗口的大小就是分区的大小</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查询员工姓名、薪水、部门薪水总和</span></span><br><span class="line"><span class="comment">-- partition by deptno : 以部门编号来分组</span></span><br><span class="line"><span class="keyword">select</span> ename, sal, <span class="built_in">sum</span>(sal) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> deptno) salsum <span class="keyword">from</span> emp</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="order-by-子句"><a href="#order-by-子句" class="headerlink" title="order by 子句"></a>order by 子句</h3><p>order by 子句对输入的数据进行排序</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 增加了order by子句；sum：从分组的第一行到当前行求和</span></span><br><span class="line"><span class="comment">-- 实现在每个分组中的排序</span></span><br><span class="line"><span class="keyword">select</span> ename, sal, deptno, <span class="built_in">sum</span>(sal) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> deptno <span class="keyword">order</span> <span class="keyword">by</span> sal) salsum  <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>window子句</strong></p>
+<blockquote>
+<p>row between … and …</p>
+</blockquote>
+<p>用于限定窗口的大小，即始末行的位置</p>
+<blockquote>
+<p>unbounded preceding。组内第一行数据<br>n preceding。组内当前行的前n行数据<br>current row。当前行数据<br>n following。组内当前行的后n行数据<br>unbounded following。组内最后一行数据</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 等价。组内，第一行到当前行的和</span></span><br><span class="line"><span class="keyword">select</span> ename, sal, deptno, </span><br><span class="line">       <span class="built_in">sum</span>(sal) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> deptno <span class="keyword">order</span> <span class="keyword">by</span> ename) <span class="keyword">from</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> ename, sal, deptno, </span><br><span class="line">       <span class="built_in">sum</span>(sal) <span class="keyword">over</span> (<span class="keyword">partition</span> <span class="keyword">by</span> deptno <span class="keyword">order</span> <span class="keyword">by</span> ename</span><br><span class="line">                     <span class="keyword">rows</span> <span class="keyword">between</span> unbounded preceding <span class="keyword">and</span> <span class="keyword">current</span> <span class="type">row</span></span><br><span class="line">                    ) </span><br><span class="line">                    <span class="keyword">from</span> emp;</span><br><span class="line"><span class="comment">-- 组内，第一行到最后一行的和</span></span><br><span class="line"><span class="keyword">select</span> ename, sal, deptno, </span><br><span class="line">       <span class="built_in">sum</span>(sal) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> deptno <span class="keyword">order</span> <span class="keyword">by</span> ename</span><br><span class="line">                     <span class="keyword">rows</span> <span class="keyword">between</span> unbounded preceding <span class="keyword">and</span> unbounded following</span><br><span class="line">                    ) </span><br><span class="line">                    <span class="keyword">from</span> emp;</span><br><span class="line">  </span><br><span class="line"><span class="comment">-- 组内，前一行 + 当前行 +后一行</span></span><br><span class="line"><span class="keyword">select</span> ename, sal, deptno, </span><br><span class="line">       <span class="built_in">sum</span>(sal) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> deptno <span class="keyword">order</span> <span class="keyword">by</span> ename</span><br><span class="line">                     <span class="keyword">rows</span> <span class="keyword">between</span> <span class="number">1</span> preceding <span class="keyword">and</span> <span class="number">1</span> following</span><br><span class="line">                    ) </span><br><span class="line">                    <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>排名函数</strong></p>
+<p>都是从1开始，生成数据项在分组中的排名。</p>
+<blockquote>
+<p>row_number()。排名顺序增加不会重复；如1、2、3、4、… …<br>RANK()。 排名相等会在名次中留下空位；如1、2、2、4、5、… …<br>DENSE_RANK()。 排名相等会在名次中不会留下空位 ；如1、2、2、3、4、…</p>
+</blockquote>
+<p><strong>序列函数</strong></p>
+<p>该函数可以获取到当前行的上一行或后一行数据</p>
+<blockquote>
+<p>lag。返回当前数据行的上一行数据<br>lead。返回当前数据行的下一行数据<br>first_value。取分组内排序后，截止到当前行，第一个值<br>last_value。分组内排序后，截止到当前行，最后一个值<br>ntile。将分组的数据按照顺序切分成n片，返回当前切片值</p>
+</blockquote>
+<p>例如:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- lag。返回当前数据行的上一行数据</span></span><br><span class="line"><span class="comment">-- lead。功能上与lag类似</span></span><br><span class="line"><span class="keyword">select</span> cid, ctime, pv,</span><br><span class="line">       <span class="built_in">lag</span>(pv) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> cid <span class="keyword">order</span> <span class="keyword">by</span> ctime) lagpv,  <span class="comment">-- 能够获取到组内当前数据上一行的pv值</span></span><br><span class="line">       <span class="built_in">lead</span>(pv) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> cid <span class="keyword">order</span> <span class="keyword">by</span> ctime) leadpv</span><br><span class="line">       <span class="keyword">from</span> userpv;</span><br><span class="line">       </span><br><span class="line"><span class="comment">-- first_value / last_value</span></span><br><span class="line"><span class="keyword">select</span> cid, ctime, pv,</span><br><span class="line">       <span class="built_in">first_value</span>(pv) <span class="keyword">over</span> (<span class="keyword">partition</span> <span class="keyword">by</span> cid <span class="keyword">order</span> <span class="keyword">by</span> ctime </span><br><span class="line">                             <span class="keyword">rows</span> <span class="keyword">between</span> unbounded preceding <span class="keyword">and</span> unbounded following) <span class="keyword">as</span> firstpv, </span><br><span class="line">       <span class="built_in">last_value</span>(pv) <span class="keyword">over</span> (<span class="keyword">partition</span> <span class="keyword">by</span> cid <span class="keyword">order</span> <span class="keyword">by</span> ctime </span><br><span class="line">                            <span class="keyword">rows</span> <span class="keyword">between</span> unbounded preceding <span class="keyword">and</span> unbounded following) <span class="keyword">as</span> lastpv <span class="keyword">from</span> userpv;</span><br><span class="line">  </span><br><span class="line"><span class="comment">-- ntile。按照cid进行分组，每组数据分成2份</span></span><br><span class="line"><span class="keyword">select</span> cid, ctime, pv,</span><br><span class="line">       <span class="built_in">ntile</span>(<span class="number">2</span>) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> cid <span class="keyword">order</span> <span class="keyword">by</span> ctime) ntile</span><br><span class="line"><span class="keyword">from</span> userpv;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h2 id="8-自定义函数"><a href="#8-自定义函数" class="headerlink" title="8. 自定义函数"></a>8. 自定义函数</h2><p>​	当hive自定义函数无法满足实际的业务处理需求时，可以考虑使用用户自定义函数来扩展。</p>
+<p>UDF开发:</p>
+<ul>
+<li>继承org.apache.hadoop.hive.ql.exec.UDF</li>
+<li>实现方法evaluate函数，该函数支持重载</li>
+<li>UDF函数必须有返回类型，可以返回null，但返回类型不能为void</li>
+</ul>
+<p>UDF步骤</p>
+<ul>
+<li>编写代码，实现自定义UDF函数</li>
+<li>打包jar上传至服务器</li>
+<li>向hive添加开发的jar</li>
+<li>设置函数与自定以函数关联</li>
+<li>使用自定义函数</li>
+</ul>
+<p>maven依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.hive<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hive-exec<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>代码编写</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.lagou.hive.udf;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.ql.exec.UDF;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Nvl</span> <span class="keyword">extends</span> <span class="title class_">UDF</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> Text <span class="title function_">evaluate</span><span class="params">(<span class="keyword">final</span> Text x, <span class="keyword">final</span> Text y)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (x == <span class="literal">null</span> || x.equals(<span class="string">&quot;&quot;</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span> y;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>打包代码上传至服务器， &#x2F;home&#x2F;hadoop&#x2F;hiveudf.jar</p>
+<p>进入hive命令行控制台，添加jar文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">add jar /home/hadoop/hiveudf.jar</span></span><br></pre></td></tr></table></figure>
+
+<p>创建临时函数，指定类名一定要是完整的类名</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">create temporary <span class="keyword">function</span> mynvl as <span class="string">&quot;com.lagou.hive.udf.Nvl&quot;</span>;</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看函数</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">show <span class="built_in">functions</span>;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试代码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="keyword">select</span> mynvl(<span class="string">&quot;&quot;</span>,<span class="string">&quot;oK&quot;</span>);</span></span><br></pre></td></tr></table></figure>
+
+<p><em>临时函数只有在当前命令行中有效，如果推出了hive命令行，再次进入时，使用自定义的函数会提示找不到函数的错误。</em></p>
+<p>创建永久函数</p>
+<ol>
+<li><p>将jar上传至hdfs</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -put hiveudf.jar /user/hadoop/jar/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>登陆Hive命令行中创建永久函数</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">create <span class="keyword">function</span> mynvl as <span class="string">&#x27;com.lagou.hive.udf.Nvl&#x27;</span> using jar <span class="string">&#x27;hdfs:/user/hadoop/jar/hiveudf.jar&#x27;</span></span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>删除永久函数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">drop <span class="keyword">function</span> mynvl;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="第八部分-元数据管理与存储"><a href="#第八部分-元数据管理与存储" class="headerlink" title="第八部分 元数据管理与存储"></a>第八部分 元数据管理与存储</h1><h2 id="Metastore"><a href="#Metastore" class="headerlink" title="Metastore"></a>Metastore</h2><img src="Hive.assets/image-20210104224653531.png"/>
+
+
+
+<p>Metastore三种配置方式</p>
+<img src="Hive.assets/image-20210129234421766.png"/>
+
+
+
+<img src="Hive.assets/image-20210129234439068.png"/>
+
+
+
+<img src="Hive.assets/image-20210129234458847.png"/>
+
+<p>配置远程模式:</p>
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>metastore</th>
+<th>client</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>linux111</td>
+<td>✔</td>
+<td></td>
+</tr>
+<tr>
+<td>linux112</td>
+<td></td>
+<td>✔</td>
+</tr>
+<tr>
+<td>linux113</td>
+<td>✔</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>​		将linux111和linux113作为元数据管理服务所在的节点， 客户端通过访问linux111或linux112来获取元数据信息， 这里两台节点启用metastore服务可以作为元数据服务的互相备份，当其中一台上的服务宕机了，还能够通过另一台上的服务访问到元数据信息。</p>
+<ol>
+<li><p>将linux113上的hive的安装文件及配置分发到三台节点上；</p>
+<p> 并启动linux111和linux113上的元数据服务</p>
+<blockquote>
+<p># 启动metastore服务</p>
+<p>nohup hive –service metastore &amp;</p>
+<p>#查询9083端口(metastore服务占用的端口)</p>
+<p>lsof -i :9083</p>
+</blockquote>
+</li>
+<li><p>修改客户端linux112节点上hive-site.xml配置，删掉MySql的配置，数据库连接信息等，增加metastore的配置如下；</p>
+</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">     <span class="comment">&lt;!-- hive metastore 服务地址 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.metastore.uris<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>thrift://linux111:9083,thrift://linux113:9083<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.metastore.client.socket.timeout<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>3600<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>在实际使用中，可以将客户端配置提供给用户，通过远程访问元数据的方式使用Hive, 而不会暴露元数据数据库信息</strong></p>
+<h2 id="HiveServer2"><a href="#HiveServer2" class="headerlink" title="HiveServer2"></a>HiveServer2</h2><p>使用hiveserver2服务可以提供jdbc的访问方式来访问数据。</p>
+<p>修改hadoop安装路径下的配置文件core-site.xml文件,增加以下内容</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.proxyuser.root.hosts<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>*<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">   </span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.proxyuser.root.groups<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>*<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.proxyuser.hadoop.hosts<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>*<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">     <span class="comment">&lt;!-- 配置代理hadoop用户的群组 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.proxyuser.hadoop.groups<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>*<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>修改hdfs-site.xml文件，增加以下内容</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.webhdfs.enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>重启hdfs和yarn服务。</p>
+<p>启动hiveserver2服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup hiveserver2 &amp;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>内嵌模式适合本地测试小数据量情况下使用</p>
+<p>hive2.1版本之后，需要先初始化元数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/schematool -dbType derby -initSchema</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+<p>内嵌模式运行注意问题</p>
+<p>使用内嵌的derby数据库来初始化时提示如下错误</p>
+<p><img src="/images/image-20230614231128720.png" alt="image-20230614231128720"></p>
+<p>解决办法如下， 按如下方法在脚本中注释报错的函数</p>
+<p><img src="/images/image-20230614230816473.png" alt="image-20230614230816473"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/04/05/hive/Hive%E5%9F%BA%E7%A1%80/" data-id="clumsd6x9000habr72qi6g0la" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/04/05/impala/Impala%E4%BD%BF%E7%94%A8/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/04/05/hbase/Hbase/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/04/05/%E6%95%B0%E4%BB%93%E7%BB%8F%E9%AA%8C/%E9%9D%A2%E8%AF%95%E9%A2%98/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/Zookeeper/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA(HA)/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%BC%96%E7%A8%8B-RDD%E9%AB%98%E9%98%B6/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

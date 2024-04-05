@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="SparkSQL处理结构化数据。 ​		在Spark 0.x版的时候推出了Shark，Shark与Hive是紧密关联的，Shark底层很多东西还是依赖于Hive，修改了内存管理、物理计划、执行三个模块，底层使用Spark的基于内存的计算模型，性能上比Hive提升了很多倍。​		Shark更多是对Hive的改造，替换了Hive的物理执行引擎，提高了执行速度。但Shark继承了大量的Hive代码，因此">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/04/05/spark/spark%E7%BC%96%E7%A8%8B-SQL&DataFrame&DataSet/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="SparkSQL处理结构化数据。 ​		在Spark 0.x版的时候推出了Shark，Shark与Hive是紧密关联的，Shark底层很多东西还是依赖于Hive，修改了内存管理、物理计划、执行三个模块，底层使用Spark的基于内存的计算模型，性能上比Hive提升了很多倍。​		Shark更多是对Hive的改造，替换了Hive的物理执行引擎，提高了执行速度。但Shark继承了大量的Hive代码，因此">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/image-20210803183924243.png">
+<meta property="article:published_time" content="2024-04-05T14:53:22.936Z">
+<meta property="article:modified_time" content="2024-04-05T14:53:22.936Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/image-20210803183924243.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-spark/spark编程-SQL&amp;DataFrame&amp;DataSet" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/04/05/spark/spark%E7%BC%96%E7%A8%8B-SQL&DataFrame&DataSet/" class="article-date">
+  <time class="dt-published" datetime="2024-04-05T14:53:22.936Z" itemprop="datePublished">2024-04-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>SparkSQL处理结构化数据。</p>
+<p>​		在Spark 0.x版的时候推出了Shark，Shark与Hive是紧密关联的，Shark底层很多东西还是依赖于Hive，修改了内存管理、物理计划、执行三个模块，底层使用Spark的基于内存的计算模型，性能上比Hive提升了很多倍。<br>​		Shark更多是对Hive的改造，替换了Hive的物理执行引擎，提高了执行速度。但Shark继承了大量的Hive代码，因此给优化和维护带来了大量的麻烦。<br>​		在Spark 1.x的时候Shark被淘汰。在2014 年7月1日的Spark Summit 上，Databricks宣布终止对Shark的开发，将重点放到 Spark SQL 上。</p>
+<p>SparkSQL数据抽象</p>
+<p>​		SparkSQL提供了两个新的抽象，分别是DataFrame和DataSet。</p>
+<ol>
+<li><p>DataFrame</p>
+<p> 与RDD类似，DataFrame也是一个分布式数据集：</p>
+<ul>
+<li>DataFrame可以看做分布式 Row 对象的集合，提供了由列组成的详细模式信息，使其可以得到优化。</li>
+<li>DataFrame 不仅有比RDD更多的算子，还可以进行执行计划的优化</li>
+<li>DataFrame更像传统数据库的二维表格，除了数据以外，还记录数据的结构信息，即schema</li>
+<li>DataFrame也支持嵌套数据类型（struct、array和map）</li>
+<li>DataFrame API提供的是一套高层的关系操作，比函数式的RDD API要更加友好，门槛更低</li>
+<li>Dataframe的劣势在于在编译期缺少类型安全检查，导致运行时出错</li>
+</ul>
+</li>
+</ol>
+<p><img src="/./images/image-20210803183924243.png" alt="image-20210803183924243"></p>
+<ol start="2">
+<li><p>DataSet </p>
+<p> 与RDD相比，保存更多的描述信息，概念上等同于关系型数据库中的二维表；</p>
+<p> 与DataFrame相比，保存了类型信息， 是强类型的，提供编译时类型检查。</p>
+<p> 调用DataSet的方法会先生成逻辑计划，然后Spark的优化器进行优化，最终生成物理计划，提交到集群中运行。</p>
+</li>
+</ol>
+<p>三者之间转换</p>
+<p>RDD, DataSet, DataFrame</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/04/05/spark/spark%E7%BC%96%E7%A8%8B-SQL&DataFrame&DataSet/" data-id="clumsd6xb000tabr70td15px8" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/04/05/spark/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/04/05/spark/spark%E5%8E%9F%E7%90%86%E5%88%A8%E6%9E%90/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/04/05/%E6%95%B0%E4%BB%93%E7%BB%8F%E9%AA%8C/%E9%9D%A2%E8%AF%95%E9%A2%98/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/Zookeeper/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA(HA)/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%BC%96%E7%A8%8B-RDD%E9%AB%98%E9%98%B6/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="介绍​		Nginx是一款轻量级的Web服务器,  反向代理服务器及电子邮件代理服务器。  占用内存少；  Nginx在高并发的情况下，能够支持高达50000个并发连接的响应；  支持热部署，可以在不间断服务的情况下，对软件版本升级。   应用场景  作为http服务可以独立提供http服务，用作网页静态服务器； 用来实现在一台服务器虚拟出多个网站，作为个人网站使用的虚拟主机； 做反向代理，负载均">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/04/05/nginx/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="介绍​		Nginx是一款轻量级的Web服务器,  反向代理服务器及电子邮件代理服务器。  占用内存少；  Nginx在高并发的情况下，能够支持高达50000个并发连接的响应；  支持热部署，可以在不间断服务的情况下，对软件版本升级。   应用场景  作为http服务可以独立提供http服务，用作网页静态服务器； 用来实现在一台服务器虚拟出多个网站，作为个人网站使用的虚拟主机； 做反向代理，负载均">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210315213956897.png">
+<meta property="og:image" content="http://example.com/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210315214524751.png">
+<meta property="og:image" content="http://example.com/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210315220451163.png">
+<meta property="og:image" content="http://example.com/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210316000320313.png">
+<meta property="og:image" content="http://example.com/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210315220813214.png">
+<meta property="og:image" content="http://example.com/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210315221124174.png">
+<meta property="og:image" content="http://example.com/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210316000417080.png">
+<meta property="og:image" content="http://example.com/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210316000848046.png">
+<meta property="og:image" content="http://example.com/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210316003242327.png">
+<meta property="og:image" content="http://example.com/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210316002911578.png">
+<meta property="og:image" content="http://example.com/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/2660278-bfdc4848a69c14d1.jpg">
+<meta property="og:image" content="http://example.com/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210316005711915.png">
+<meta property="article:published_time" content="2024-04-05T14:53:22.910Z">
+<meta property="article:modified_time" content="2024-04-05T14:53:22.910Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210315213956897.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-nginx/nginx基础使用" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/04/05/nginx/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/" class="article-date">
+  <time class="dt-published" datetime="2024-04-05T14:53:22.910Z" itemprop="datePublished">2024-04-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​		Nginx是一款轻量级的Web服务器,  反向代理服务器及电子邮件代理服务器。</p>
+<ul>
+<li><p>占用内存少；</p>
+</li>
+<li><p>Nginx在高并发的情况下，能够支持高达50000个并发连接的响应；</p>
+</li>
+<li><p>支持热部署，可以在不间断服务的情况下，对软件版本升级。</p>
+</li>
+</ul>
+<p><strong>应用场景</strong></p>
+<ol>
+<li>作为http服务可以独立提供<strong>http服务</strong>，用作网页静态服务器；</li>
+<li>用来实现在一台服务器虚拟出多个网站，作为个人网站使用的<strong>虚拟主机</strong>；</li>
+<li>做<strong>反向代理，负载均衡</strong>，当网站访问量达到一定的程度后，单台服务器不能满足用户的请求时，需要用多台服务器的集群，这时使用nginx做反向代理，向多台服务器平均分担负载，不会某台服务器负载高宕机，而其他有机器存在空闲的情况。</li>
+</ol>
+<h1 id="Nginx安装"><a href="#Nginx安装" class="headerlink" title="Nginx安装"></a>Nginx安装</h1><h2 id="准备安装环境"><a href="#准备安装环境" class="headerlink" title="准备安装环境"></a>准备安装环境</h2><p>本例中使用源码编译安装的方式， 准备源码文件 nginx-1.17.8.tar</p>
+<p>下载路径: <a target="_blank" rel="noopener" href="http://nginx.org/en/download.html">http://nginx.org/en/download.html</a></p>
+<ol>
+<li><p>安装c语言编译环境</p>
+<blockquote>
+<p>yum install gcc-c++</p>
+</blockquote>
+</li>
+<li><p>安装第三方的依赖</p>
+<p> nginx的http模块使用pcre来解析正则表达式，所以需要在linux上安装pcre库</p>
+<blockquote>
+<p>yum install -y pcre-devel</p>
+</blockquote>
+<p> nginx使用zlib对http包的内容进行gzip，所以需要在linux上安装zlib库</p>
+<blockquote>
+<p>yum install -y zlib zlib-devel</p>
+</blockquote>
+<p> OpenSSL 是一个强大的安全套接字层密码库,nginx不仅支持http协议，还支持https,所以需要在linux安装openssl库</p>
+<blockquote>
+<p>yum install -y openssl openssl-devel</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="编译并按转Nginx"><a href="#编译并按转Nginx" class="headerlink" title="编译并按转Nginx"></a>编译并按转Nginx</h2><p>进入nginx解压后的目录下</p>
+<p><img src="/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210315213956897.png" alt="image-20210315213956897"></p>
+<p>执行configure, 生成Makefile文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">./configure \</span><br><span class="line">--prefix=/usr/local/nginx \</span><br><span class="line">--pid-path=/var/run/nginx/nginx.pid \</span><br><span class="line">--lock-path=/var/lock/nginx.lock \</span><br><span class="line">--error-log-path=/var/log/nginx/error.log \</span><br><span class="line">--http-log-path=/var/log/nginx/access.log \</span><br><span class="line">--with-http_gzip_static_module \</span><br><span class="line">--http-client-body-temp-path=/var/temp/nginx/client \ ## 指定输出的目录，要先创建好</span><br><span class="line">--http-proxy-temp-path=/var/temp/nginx/proxy \</span><br><span class="line">--http-fastcgi-temp-path=/var/temp/nginx/fastcgi \</span><br><span class="line">--http-uwsgi-temp-path=/var/temp/nginx/uwsgi \</span><br><span class="line">--http-scgi-temp-path=/var/temp/nginx/scgi</span><br></pre></td></tr></table></figure>
+
+<p>等待运行结果，生成Makefile文件</p>
+<p><img src="/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210315214524751.png" alt="image-20210315214524751"></p>
+<p>使用make命令，执行编译 make</p>
+<p>安装使用 make install</p>
+<p><img src="/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210315220451163.png" alt="image-20210315220451163"></p>
+<p>安装完成后，可以看到安装目录为**&#x2F;usr&#x2F;local&#x2F;nginx**下。</p>
+<p><img src="/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210316000320313.png" alt="image-20210316000320313"></p>
+<p>进入sbin目录下，启动nginx</p>
+<p>.&#x2F;ngnix</p>
+<p><img src="/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210315220813214.png" alt="image-20210315220813214"></p>
+<blockquote>
+<p>.&#x2F;nginx -s stop  # 停止nginx</p>
+<p>.&#x2F;nginx -s reload # 重启nginx</p>
+</blockquote>
+<p>浏览器访问，检查是否安运行正常</p>
+<p><img src="/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210315221124174.png" alt="image-20210315221124174"></p>
+<h1 id="配置虚拟主机"><a href="#配置虚拟主机" class="headerlink" title="配置虚拟主机"></a>配置虚拟主机</h1><p>​		虚拟主机使用的是特殊的软硬件技术，它把一台运行在因特网上的服务器主机分成一台台“虚拟”的主机，每台虚拟主机都可以是一个独立的网站，可以具有独立的域名，具有完整的Intemet服务器功能（WWW、FTP、Email等），同一台主机上的虚拟主机之间是完全独立的。从网站访问者来看，每一台虚拟主机和一台独立的主机完全一样。</p>
+<p>​		利用虚拟主机，不用为每个要运行的网站提供一台单独的Nginx服务器或单独运行一组Nginx进程。虚拟主机提供了在同一台服务器、同一组Nginx进程上运行多个网站的功能。</p>
+<p>区分不同网站的方式：</p>
+<ul>
+<li><p>端口不同</p>
+</li>
+<li><p>域名不同</p>
+</li>
+</ul>
+<p>nginx.conf 配置文件说明</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">worker_processes 1; #work的进程数，默认为1</span><br><span class="line">#配置 影响nginx服务器与用户的网络连接</span><br><span class="line">events &#123;</span><br><span class="line">   worker_connections 1024; #单个work 最大并发连接数</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"># http块是配置最频繁的部分 可以嵌套多个server，配置代理，缓存，日志定义等绝大多数功能</span><br><span class="line">http &#123;</span><br><span class="line">    # 引入mime类型定义文件</span><br><span class="line">   include    mime.types;</span><br><span class="line">   default_type  application/octet-stream;</span><br><span class="line">   sendfile     on;</span><br><span class="line">   # 超时时间</span><br><span class="line">   keepalive_timeout 65;</span><br><span class="line">    </span><br><span class="line">    #server 配置虚拟主机的相关参数 可以有多个,一个server就是一个虚拟主机</span><br><span class="line">   server &#123;</span><br><span class="line">        # 监听的端口</span><br><span class="line">     listen    80; </span><br><span class="line">        #监听地址</span><br><span class="line">     server_name  localhost;     </span><br><span class="line"> </span><br><span class="line">        # 默认请求配置</span><br><span class="line">     location / &#123;</span><br><span class="line">       root  html; # 默认网站根目录</span><br><span class="line">       index  index.html index.htm; # 欢迎页</span><br><span class="line">     &#125;</span><br><span class="line"> </span><br><span class="line">        # 错误提示页面</span><br><span class="line">     error_page  500 502 503 504  /50x.html;</span><br><span class="line">     location = /50x.html &#123;</span><br><span class="line">       root  html;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="通过端口访问不同的虚拟机"><a href="#通过端口访问不同的虚拟机" class="headerlink" title="通过端口访问不同的虚拟机"></a>通过端口访问不同的虚拟机</h2><p>配置nginx.conf配置文件,</p>
+<p>设置两个虚拟主机网站，分别使用不同的端口80和81， 并指定不同的根目录。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">#user  nobody;</span><br><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">#error_log  logs/error.log;</span><br><span class="line">#error_log  logs/error.log  notice;</span><br><span class="line">#error_log  logs/error.log  info;</span><br><span class="line"></span><br><span class="line">#pid        logs/nginx.pid;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    #access_log  logs/access.log  main;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;</span><br><span class="line"></span><br><span class="line">    #keepalive_timeout  0;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    #gzip  on;</span><br><span class="line">    # 指定一个虚拟主机网址</span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    # 指定另外一个虚拟主机网址</span><br><span class="line">    server &#123;</span><br><span class="line">        listen       81;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html81;  # 重新指定一个根目录</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>将html目录复制一份， 表示两个网站的根目录</p>
+<blockquote>
+<p>cp -r html html81 </p>
+</blockquote>
+<p><img src="/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210316000417080.png" alt="image-20210316000417080"></p>
+<p>还要重新加载一下配置，使用</p>
+<blockquote>
+<p>.&#x2F;nginx -s reload</p>
+</blockquote>
+<p>使用浏览器访问两个虚拟http服务</p>
+<p><a target="_blank" rel="noopener" href="http://192.168.80.100/">http://192.168.80.100:80</a>  访问第一个网站</p>
+<p><a target="_blank" rel="noopener" href="http://192.168.80.101:81/">http://192.168.80.101:81</a>  访问第二个网站</p>
+<p><img src="/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210316000848046.png" alt="image-20210316000848046"></p>
+<h2 id="通过域名访问"><a href="#通过域名访问" class="headerlink" title="通过域名访问"></a>通过域名访问</h2><p>修改nginx服务器上的hosts文件，</p>
+<blockquote>
+<p>192.168.80.100 <a target="_blank" rel="noopener" href="http://www.ng.com/">www.ng.com</a></p>
+</blockquote>
+<p>同时也要修改需要修改本地客户端访问机器的host文件，以本地windows为例修改hosts （C:\Windows\System32\drivers\etc）</p>
+<blockquote>
+<p>192.168.80.100 <a target="_blank" rel="noopener" href="http://www.taobao1.com/">www.taobao1.com</a><br>192.168.80.100 <a target="_blank" rel="noopener" href="http://www.jd1.com/">www.jd1.com</a></p>
+</blockquote>
+<p>修改nginx.conf配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line"> listen    80;</span><br><span class="line"> server_name  www.taobao1.com;</span><br><span class="line"> </span><br><span class="line">    location / &#123;</span><br><span class="line">        root   taobao;  </span><br><span class="line">        index  taobao.html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen    80;</span><br><span class="line">    server_name  www.jd1.com;</span><br><span class="line"> </span><br><span class="line">    location / &#123;</span><br><span class="line">        root  jd;</span><br><span class="line">        index  jd.html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>创建网站根目录</p>
+<p><img src="/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210316003242327.png" alt="image-20210316003242327"></p>
+<p>重新加载配置</p>
+<blockquote>
+<p>.&#x2F;nginx -s reload</p>
+</blockquote>
+<p>客户端浏览器访问</p>
+<p><a target="_blank" rel="noopener" href="http://www.taobao1.com/">http://www.taobao1.com:80</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.jd1.com/">http://www.jd1.com:80</a></p>
+<p><img src="/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210316002911578.png" alt="image-20210316002911578"></p>
+<h1 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h1><p>​		正向代理中，客户端是要访问某个特定网络资源时，是直接在浏览器中输入要访问的地址，而实际上请求被代理服务接收到，并由代理服务去访问指定资源然后返回给客户端。例如国内访问谷歌网站时，不能直接访问到，于是借助一些代理服务器实现请求的转发。</p>
+<p>​		反向代理中，我们是访问代理服务地址， 而并不知道实际资源的位置，代理服务会将我们的请求自动转发到实际资源所在的服务器上，并返回响应给客户端。</p>
+<p>​		反向代理位于服务端，由服务端内部转发请求，内部请求的资源地址对客户端透明；而正向代理可以认为由客户端管理</p>
+<p><img src="/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/2660278-bfdc4848a69c14d1.jpg" alt="img"></p>
+<h2 id="Nginx反向代理配置"><a href="#Nginx反向代理配置" class="headerlink" title="Nginx反向代理配置"></a>Nginx反向代理配置</h2><ol>
+<li>使用2个tomcat实例模拟两台http服务器，修改端口为8080和8081</li>
+</ol>
+<p><img src="/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8.assets/image-20210316005711915.png" alt="image-20210316005711915"></p>
+<ol start="2">
+<li><p>启动两个tomcat;</p>
+<p> 访问测试</p>
+<p> <a target="_blank" rel="noopener" href="http://192.168.80.101:8080/">http://192.168.80.101:8080/</a></p>
+<p> <a target="_blank" rel="noopener" href="http://192.168.80.101:8081/">http://192.168.80.101:8081/</a></p>
+</li>
+<li><p>配置nginx.conf文件</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">  #反向代理配置 </span><br><span class="line">  #upstream中的server是真正处理请求的应用服务器地址</span><br><span class="line">  upstream lagou1&#123;</span><br><span class="line">      #用server定义HTTP地址,是请求转发的目的地</span><br><span class="line">      server 192.168.80.101:8080;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  server &#123;</span><br><span class="line">      listen       80;</span><br><span class="line">      server_name  www.lagou1.com;</span><br><span class="line">      location / &#123;</span><br><span class="line">        # 利用 proxy_ pass可以将请求代理到upstream命名的HTTP服务</span><br><span class="line">        proxy_pass http://lagou1;  #转发到的地址</span><br><span class="line">        index  index.html index.htm;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">  upstream lagou2&#123;</span><br><span class="line">      #用server定义HTTP地址</span><br><span class="line">      server 192.168.80.100:8081;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  server &#123;</span><br><span class="line">      listen       80;</span><br><span class="line">      server_name  www.lagou2.com;</span><br><span class="line">      location / &#123;</span><br><span class="line">          proxy_pass http://lagou2;</span><br><span class="line">          index  index.html index.htm;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在windows本地hosts文件中添加以下域名</p>
+<p>192.168.80.101 <a target="_blank" rel="noopener" href="http://www.lagou1.com/">www.lagou1.com</a><br>192.168.80.101 <a target="_blank" rel="noopener" href="http://www.lagou2.com/">www.lagou2.com</a></p>
+<p>这样通过浏览器访问 <a target="_blank" rel="noopener" href="http://www.lagou1.com/">http://www.lagou1.com</a> 时请求便被转发到192.168.80.101:8080服务器上了。</p>
+<h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>​		使用nginx来转发请求到多台服务器上，可以分散请求处理的压力，这个过程就是负载均衡。</p>
+<p>负载均衡策略：</p>
+<ol>
+<li>轮询负载策略</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">upstream lagoedu&#123;</span><br><span class="line">    # 用server定义 HTTP地址</span><br><span class="line">    server 192.168.80.100:8081;</span><br><span class="line">    server 192.168.80.100:8082;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">server &#123;</span><br><span class="line">   listen    80;</span><br><span class="line">   server_name  www.lagoedu.com;</span><br><span class="line"> </span><br><span class="line">   location / &#123;</span><br><span class="line">  # 利用 proxy_ pass可以将请求代理到upstream命名的HTTP服务</span><br><span class="line">     proxy_pass  http://lagoedu;</span><br><span class="line">     index  index.html;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>即在一个代理下依次配置多个服务其地址，由nginx轮询这些服务器，依次将请求转发出去。</p>
+<ol start="2">
+<li>权重负载weight</li>
+</ol>
+<p>除了轮询的方式来转发请求，还可以对每台服务器添加轮询的权重，优先选择权重大的服务器来处理请求，默认情况下的权重都是1.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">upstream lagoedu&#123;</span><br><span class="line">    # 用server定义 HTTP地址</span><br><span class="line">    # 指定每台服务器负载的权重</span><br><span class="line">    server 192.168.80.100:8081 weight=1;</span><br><span class="line">    server 192.168.80.100:8082 weight=10;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">server &#123;</span><br><span class="line">   listen    80;</span><br><span class="line">   server_name  www.lagoedu.com;</span><br><span class="line"> </span><br><span class="line">   location / &#123;</span><br><span class="line">  # 利用 proxy_ pass可以将请求代理到upstream命名的HTTP服务</span><br><span class="line">     proxy_pass  http://lagoedu;</span><br><span class="line">     index  index.html;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里负载均衡与反向代理类似，只不过负载均衡是将请求转发到多台服务器上，从而将请求处理分摊出去。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/04/05/nginx/nginx%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/" data-id="clumsd6xa000labr72nny8nqc" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/04/05/redis/Redis%E5%85%A5%E9%97%A8/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/04/05/netty/Netty02-%E5%85%A5%E9%97%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/04/05/%E6%95%B0%E4%BB%93%E7%BB%8F%E9%AA%8C/%E9%9D%A2%E8%AF%95%E9%A2%98/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/Zookeeper/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA(HA)/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%BC%96%E7%A8%8B-RDD%E9%AB%98%E9%98%B6/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

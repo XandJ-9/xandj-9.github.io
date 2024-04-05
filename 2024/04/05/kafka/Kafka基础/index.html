@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Kafka基础入门使用Kafka主要设计目标如下：  以时间复杂度为O(1)的方式提供消息持久化能力，即使对TB级以上数据也能保证常数时间的访问性能。 高吞吐率。即使在非常廉价的商用机器上也能做到单机支持每秒100K条消息的传输。 支持Kafka Server间的消息分区，及分布式消费，同时保证每个partition内的消息顺序传输。 同时支持离线数据处理和实时数据处理。 支持在线水平扩展  应用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/04/05/kafka/Kafka%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Kafka基础入门使用Kafka主要设计目标如下：  以时间复杂度为O(1)的方式提供消息持久化能力，即使对TB级以上数据也能保证常数时间的访问性能。 高吞吐率。即使在非常廉价的商用机器上也能做到单机支持每秒100K条消息的传输。 支持Kafka Server间的消息分区，及分布式消费，同时保证每个partition内的消息顺序传输。 同时支持离线数据处理和实时数据处理。 支持在线水平扩展  应用">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2024/04/05/kafka/Kafka%E5%9F%BA%E7%A1%80/img/p1.png">
+<meta property="og:image" content="http://example.com/img/p2.png">
+<meta property="og:image" content="http://example.com/img/p3.png">
+<meta property="article:published_time" content="2024-04-05T14:53:22.896Z">
+<meta property="article:modified_time" content="2024-04-05T14:53:22.896Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/04/05/kafka/Kafka%E5%9F%BA%E7%A1%80/img/p1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-kafka/Kafka基础" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/04/05/kafka/Kafka%E5%9F%BA%E7%A1%80/" class="article-date">
+  <time class="dt-published" datetime="2024-04-05T14:53:22.896Z" itemprop="datePublished">2024-04-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Kafka基础入门使用"><a href="#Kafka基础入门使用" class="headerlink" title="Kafka基础入门使用"></a>Kafka基础入门使用</h1><p>Kafka主要设计目标如下：</p>
+<ul>
+<li>以时间复杂度为O(1)的方式提供消息持久化能力，即使对TB级以上数据也能保证常数时间的访问性能。</li>
+<li>高吞吐率。即使在非常廉价的商用机器上也能做到单机支持每秒100K条消息的传输。</li>
+<li>支持Kafka Server间的消息分区，及分布式消费，同时保证每个partition内的消息顺序传输。</li>
+<li>同时支持离线数据处理和实时数据处理。</li>
+<li>支持在线水平扩展</li>
+</ul>
+<p><strong>应用场景</strong></p>
+<ul>
+<li>日志收集：一个公司可以用Kafka可以收集各种服务的Log，通过Kafka以统一接口服务的方式开放给各种Consumer；</li>
+<li>消息系统：解耦生产者和消费者、缓存消息等；</li>
+<li>用户活动跟踪：Kafka经常被用来记录Web用户或者App用户的各种活动，如浏览网页、搜索、点击等活动，这些活动信息被各个服务器发布到Kafka的Topic中，然后消费者通过订阅这些Topic来做实时的监控分析，亦可保存到数据库；</li>
+<li>运营指标：Kafka也经常用来记录运营监控数据。包括收集各种分布式应用的数据，生产各种操作的集中反馈，比如报警和报告；</li>
+<li>流式处理：比如Spark Streaming和Storm。</li>
+</ul>
+<h2 id="角色概念"><a href="#角色概念" class="headerlink" title="角色概念"></a>角色概念</h2><img src="img/p1.png">
+
+
+
+
+
+<p><strong>消息批次</strong></p>
+<p>​		Kafka的数据单元称为消息。可以把消息看成是数据库里的一个“数据行”或一条“记录”。消息由字节<br>数组组成。</p>
+<h2 id="核心概念介绍"><a href="#核心概念介绍" class="headerlink" title="核心概念介绍"></a>核心概念介绍</h2><ol>
+<li><p><strong>Producer</strong> – 消息生产者<br> 该角色将消息发布到Kafka的topic中。broker接收到生产者发送的消息后，broker将该消息追加到当前用于追加数据的segment文件中。<br> 一般情况下，一个消息会被发布到一个特定的主题上。</p>
+<ol>
+<li>默认情况下通过<strong>轮询</strong>把消息<strong>均衡</strong>地分布到主题的所有分区上。</li>
+<li>在某些情况下，生产者会把消息直接写到指定的分区。这通常是通过消息键和分区器来实现<br> 的，分区器为键生成一个散列值，并将其映射到指定的分区上。这样可以保证包含同一个键的<br> 消息会被写到同一个分区上。</li>
+<li>生产者也可以使用自定义的分区器，根据不同的业务规则将消息映射到分区。</li>
+</ol>
+</li>
+<li><p>**Consumer **– 消息消费者</p>
+<p> ​		消费者订阅主题，按顺序读取数据；消费者通过检查消息的偏移量来区分已经复去过的消息，偏移量是记为一个不断递增的整数值，在创建消息时，Kafka会把偏移量添加到消息里。在给定的分区里，每个消息的偏移量是唯一的，即每一个分区里的每一条消息都有位移的偏移量。消费者会把每个分区最后读取的偏移量保存在Zookeeper或Kafka上。</p>
+<p> <em>0.10.1.0以前版本的kafka将偏移量存储在zookeeper上， 之后的版本则将便宜量存储在kafka的一个名为__consumer_offsets的主题下</em></p>
+<p> ​		多个消费者可以分配到同一个消费组中，消费组保证了组内每个分区只能被一个消费者使用。</p>
+<p> ​		如果一个消费者失效了，消费组里的其他消费者可以接管失效消费组的工作，通过分区再平衡，分区会重新分配给可用的消费者。</p>
+</li>
+<li><p><strong>Broker</strong>– 独立的kafka服务器节点</p>
+<p> ​		broker 为消费者提供服务，对读取分区的请求作出响应，返回已经提交到磁盘上的消息。</p>
+<ol>
+<li>如果某topic有N个partition，集群有N个broker，那么每个broker存储该topic的一个partition;</li>
+</ol>
+</li>
+<li><p>如果某topic有N个partition，集群有(N+M)个broker，那么其中有N个broker存储该topic的一个partition，剩下的M个broker不存储该topic的partition数据;</p>
+<ol start="3">
+<li>如果某topic有N个partition，集群中broker数目少于N个，那么一个broker存储该topic的一个或多个partition。在实际生产环境中，尽量避免这种情况的发生，这种情况容易导致Kafka.</li>
+</ol>
+</li>
+<li><p><strong>Replicas</strong> –副本</p>
+<p> 副本分为两类：领导者副本(leader replica) 和追随者副本(follower replica)。follower replica是不能提供服务给客户端，也就是说不负责响应客户端发来的消息写入和消息消费请求。他只是被动地向领导者副本获取数据，而一旦leader replica所在的broker宕机了，Kafka会从剩余的replica中选举出新的leader继续提供服务。</p>
+</li>
+</ol>
+<p>​		4.1 ISR</p>
+<p>​		所有与leader副本保持一定程度同步的副本（包括Leader）组成ISR（In-Sync Replicas），ISR集合是AR集合中的一个子集。消息会先发送到leader副本，然后follower副本才能从leader副本中拉取消息进行同步，同步期间内follower副本相对于leader副本而言会有一定程度的滞后。前面所说的“一定程度”是指可以忍受的滞后范围，这个范围可以通过参数进行配置。</p>
+<p>​		4.2 OSR</p>
+<p>​	与leader副本同步滞后过多的副本（不包括leader）副本，组成OSR(Out-Sync Relipcas)。在正常情况下，所有的follower副本都应该与leader副本保持一定程度的同步，即AR&#x3D;ISR,OSR集合为空。</p>
+<h2 id="脚本命令操作"><a href="#脚本命令操作" class="headerlink" title="脚本命令操作"></a>脚本命令操作</h2><h3 id="主题管理"><a href="#主题管理" class="headerlink" title="主题管理"></a>主题管理</h3><p><strong>创建主题</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --zookeeper node1:2181,node2:2181,node3:2181/myKafka  --create --topic tp_log --partitions 3 --replication-factor 3</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>查看主题</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --zookeeper node1:2181,node2:2181,node3:2181/myKafka  --list</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>修改主题配置</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">修改配置项 config.max.message.bytes</span> </span><br><span class="line">kafka-topics.sh --zookeeper node1:2181/myKafka --alter --topic topic_test_01 --config max.message.bytes=1048576</span><br></pre></td></tr></table></figure>
+
+<p><strong>打印主题信息</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打印主题信息</span> </span><br><span class="line">kafka-topics.sh --zookeeper node1:2181/myKafka --describe --topic tp_log</span><br></pre></td></tr></table></figure>
+
+<p><img src="/img/p2.png" alt="image-20210324234857394">“</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除配置项</span></span><br><span class="line">kafka-topics.sh --zookeeper node1:2181/myKafka --alter --delete-config max.message.bytes --topic topic_test_01</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除主题</span></span><br><span class="line">bin/kafka-topics.sh --zookeeper node1:2181/myKafka --delete --topic tp_log</span><br></pre></td></tr></table></figure>
+
+<p><img src="/img/p3.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/04/05/kafka/Kafka%E5%9F%BA%E7%A1%80/" data-id="clumsd6x9000iabr7aoclarwi" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/04/05/netty/Netty01-nio/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/04/05/netty/Netty04-%E4%BC%98%E5%8C%96%E4%B8%8E%E6%BA%90%E7%A0%81/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/04/05/%E6%95%B0%E4%BB%93%E7%BB%8F%E9%AA%8C/%E9%9D%A2%E8%AF%95%E9%A2%98/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/Zookeeper/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA(HA)/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%BC%96%E7%A8%8B-RDD%E9%AB%98%E9%98%B6/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

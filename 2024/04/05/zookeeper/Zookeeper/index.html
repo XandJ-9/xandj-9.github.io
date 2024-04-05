@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="概述 Zookeeper介绍​		Zookeeper 是一个分布式协调服务的开源框架。 主要用来解决分布式集群中应用系统的一致性问题，例如怎样避免同时操作同一数据造成脏读的问题。分布式系统中数据存在一致性的问题！！  ZooKeeper 本质上是一个分布式的小文件存储系统。 提供基于类似于文件系统的目录树方式的数据存储，并且可以对树中的节点进行有效管理。 ZooKeeper 提供给客户端监控存储在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/04/05/zookeeper/Zookeeper/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="概述 Zookeeper介绍​		Zookeeper 是一个分布式协调服务的开源框架。 主要用来解决分布式集群中应用系统的一致性问题，例如怎样避免同时操作同一数据造成脏读的问题。分布式系统中数据存在一致性的问题！！  ZooKeeper 本质上是一个分布式的小文件存储系统。 提供基于类似于文件系统的目录树方式的数据存储，并且可以对树中的节点进行有效管理。 ZooKeeper 提供给客户端监控存储在">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/Zookeeper.assets/Zookeeper.png">
+<meta property="og:image" content="http://example.com/Zookeeper.assets/image-20210308.PNG">
+<meta property="og:image" content="http://example.com/Zookeeper.assets/image-20210110214521460.png">
+<meta property="og:image" content="http://example.com/Zookeeper.assets/image-20210110223053102.png">
+<meta property="og:image" content="http://example.com/Zookeeper.assets/image-20210110223115564.png">
+<meta property="og:image" content="http://example.com/Zookeeper.assets/image-20210328230845342.png">
+<meta property="og:image" content="http://example.com/Zookeeper.assets/image-20210328155711023.png">
+<meta property="og:image" content="http://example.com/2024/04/05/zookeeper/Zookeeper/Zookeeper.assets/image-20210124151151244.png">
+<meta property="og:image" content="http://example.com/Zookeeper.assets/image-20210328160134216.png">
+<meta property="og:image" content="http://example.com/Zookeeper.assets/image-20210110210847889.png">
+<meta property="og:image" content="http://example.com/Zookeeper.assets/image-20210110210919626.png">
+<meta property="article:published_time" content="2024-04-05T14:53:22.942Z">
+<meta property="article:modified_time" content="2024-04-05T14:53:22.942Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/Zookeeper.assets/Zookeeper.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-zookeeper/Zookeeper" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/04/05/zookeeper/Zookeeper/" class="article-date">
+  <time class="dt-published" datetime="2024-04-05T14:53:22.942Z" itemprop="datePublished">2024-04-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p><img src="/Zookeeper.assets/Zookeeper.png" alt="Zookeeper"></p>
+<h1 id="Zookeeper介绍"><a href="#Zookeeper介绍" class="headerlink" title="Zookeeper介绍"></a>Zookeeper介绍</h1><p>​		Zookeeper 是一个分布式协调服务的开源框架。 主要用来解决分布式集群中应用系统的一致性问题，例如怎样避免同时操作同一数据造成脏读的问题。分布式系统中数据存在一致性的问题！！</p>
+<ul>
+<li>ZooKeeper 本质上是一个分布式的小文件存储系统。 提供基于类似于文件系统的目录树方式的数据存储，并且可以对树中的节点进行有效管理。</li>
+<li>ZooKeeper 提供给客户端监控存储在zk内部数据的功能，从而可以达到基于数据的集群管理。 诸如： 统一命名服务(dubbo)、分布式配置管理(solr的配置集中管理)、分布式消息队列（sub&#x2F;pub）、分布式锁、分布式协调等功能。</li>
+</ul>
+<p><img src="/Zookeeper.assets/image-20210308.PNG" alt="image-20210308"></p>
+<h1 id="Zookeeper-特点"><a href="#Zookeeper-特点" class="headerlink" title="Zookeeper 特点"></a>Zookeeper 特点</h1><ol>
+<li>Zookeeper：一个领导者（leader:老大），多个跟随者（follower:小弟）组成的集群。</li>
+<li>Leader负责进行投票的发起和决议，更新系统状态(内部原理)</li>
+<li>Follower用于接收客户请求并向客户端返回结果, 以及在选举Leader过程中参与投票</li>
+<li>集群中只要有半数以上节点存活，Zookeeper集群就能正常服务。</li>
+<li><strong>全局数据一致</strong>：每个server保存一份相同的数据副本，Client无论连接到哪个server，数据都是一<br>致的。</li>
+<li>更新请求顺序进行(内部原理)</li>
+<li>数据更新原子性，一次数据更新要么成功，要么失败。</li>
+</ol>
+<h1 id="ZooKeeper数据模型Znode"><a href="#ZooKeeper数据模型Znode" class="headerlink" title="ZooKeeper数据模型Znode"></a>ZooKeeper数据模型Znode</h1><p><img src="/Zookeeper.assets/image-20210110214521460.png" alt="image-20210110214521460"></p>
+<p><strong>Znode</strong> 节点</p>
+<p>​	在Zookeeprr中，数据信息被保存在一个个数据节点中，这些节点被称为ZNode.</p>
+<p>Zookeeper节点累心可以分为三大类:</p>
+<p>持久性节点（Persistent）</p>
+<p>临时性节点（Ephemeral）</p>
+<p>顺序行节点（Sequential）</p>
+<p><strong>持久节点</strong>：Zookeeper中最常见的一种节点类型，节点创建后会一直存在服务器，直到删除操作主动清除。</p>
+<p><strong>持久顺序节点</strong>：有顺序的持久节点，有持久节点的特性，顺序特性是指在创建节点的时候会在节点后面加上一个数字后缀，来表示其顺序。</p>
+<p><strong>临时节点</strong>：会被自动清理的节点， 其生命周期与客户端绑定，客户端会话结束，节点会被删除掉。与持久节点不同的是，临时节点不能创建子节点。</p>
+<p><strong>临时顺序节点</strong>：有顺序的临时节点，和持久顺序节点一样，创建是会带上数字序号。</p>
+<p>​		Zookeeper中的事务是指能够改变ZK服务器状态的操作，包括数据节点的创建与删除，数据节点内容更新等操作，对于每一个事务请求，Zookeeper都会为其分配一个<strong>全局唯一</strong>的事务ID，用<strong>ZXID</strong>来表示，通常是一个64位的数字。每一个ZXID对应一次更新操作，从这些ZXID中可以间接的识别出Zookeeper处理这些更新操作的全局顺序。</p>
+<p><em>查看节点状态</em></p>
+<p>.&#x2F;zkCli.sh进入交互操作窗口</p>
+<p><img src="/Zookeeper.assets/image-20210110223053102.png" alt="image-20210110223053102"></p>
+<p><img src="/Zookeeper.assets/image-20210110223115564.png" alt="image-20210110223115564"></p>
+<p>每次修改znode中的数据时，事务的变更序号就会发生改变，如下mzxid两次的变化：</p>
+<p><img src="/Zookeeper.assets/image-20210328230845342.png" alt="image-20210328230845342"></p>
+<h1 id="Watcher监听机制"><a href="#Watcher监听机制" class="headerlink" title="Watcher监听机制"></a>Watcher监听机制</h1><p>​		Zookeeper使用Watcher机制实现分布式数据的发布&#x2F;订阅功能。一个典型的发布&#x2F;订阅模型系统定义了一种 一对多的订阅关系，能够让多个订阅者同时监听某一个主题对象，当这个主题对象自身状态变化时，会通知所有订阅者，使它们能够做出相应的处理。</p>
+<p>​		在 ZooKeeper 中，引入了 Watcher 机制来实现这种分布式的通知功能。ZooKeeper 允许客户端向服务端注册一个 Watcher 监听，当服务端的一些指定事件触发了这个 Watcher，那么Zk就会向指定客户端发送一个事件通知来实现分布式的通知功能。</p>
+<p><img src="/Zookeeper.assets/image-20210328155711023.png" alt="image-20210328155711023"></p>
+<p>Zookeeper使用Watcher机制实现的分布式数据的发布&#x2F;订阅功能。</p>
+<p>Watcher机制的主要角色包括: 客户端线程，客户端WatcherManager, Zookeeper服务器三部分。</p>
+<p>具体工作流程：</p>
+<ul>
+<li>客户端在像Zookeeper服务器注册的同时，在客户端的WatcherManager中存储一个Watcher对象</li>
+<li>当Zookeeper服务器触发Watcher事件后，回向客户端发送通知</li>
+<li>客户端从WatcherManager中取出对应的Watcher对象来执行回调逻辑</li>
+</ul>
+<p>利用zk的watcher节点监听机制，可以实现简单的分布式锁。</p>
+<h1 id="Zookeeper基本使用"><a href="#Zookeeper基本使用" class="headerlink" title="Zookeeper基本使用"></a>Zookeeper基本使用</h1><h2 id="命令行操作"><a href="#命令行操作" class="headerlink" title="命令行操作"></a>命令行操作</h2><p>通过zkCli.sh进入zookeeper客户端命令行</p>
+<p>.&#x2F;zkCli.sh </p>
+<p>.&#x2F;zkCli.sh -server ip:port    # 连接指定的服务器</p>
+<p>连接成功的话，会输出zookeeper相关的环境及配置信息，使用help查看可以使用的命令。</p>
+<img src="Zookeeper.assets/image-20210124151151244.png"/>
+
+
+
+
+
+
+
+<h1 id="ZK内部原理"><a href="#ZK内部原理" class="headerlink" title="ZK内部原理"></a>ZK内部原理</h1><h2 id="一-Leader选举机制"><a href="#一-Leader选举机制" class="headerlink" title="一. Leader选举机制"></a>一. Leader选举机制</h2><p>选举机制特点</p>
+<ul>
+<li>半数原则：集群中<strong>半数以上</strong>机器存活，集群可用。所以Zookeeper适合安装奇数台服务器。</li>
+<li>Zookeeper工作时，有一个节点为Leader，其它为Follower，Leader是通过内部的选举机制产生的。</li>
+</ul>
+<ol>
+<li>集群首次启动时，zk选举机制：</li>
+</ol>
+<p><img src="/Zookeeper.assets/image-20210328160134216.png" alt="image-20210328160134216"></p>
+<p>例如5台机器的zk集群初次启动时，有以下个过程：</p>
+<p>（1）服务器1启动，此时只有它一台服务器启动了，它发出去的报文没有任何响应，所以它的选举状态一直是LOOKING状态。<br>（2）服务器2启动，它与最开始启动的服务器1进行通信，互相交换自己的选举结果，由于两者都没有历史数据，所以id值较大的服务器2胜出，但是由于没有达到超过半数以上的服务器都同意选举它(这个例子中的半数以上是3)，所以服务器1、2还是继续保持LOOKING状态。<br>（3）服务器3启动，根据前面的理论分析，服务器3成为服务器1、2、3中的老大，而与上面不同的是，此时有三台服务器选举了它，所以它成为了这次选举的Leader。<br>（4）服务器4启动，根据前面的分析，理论上服务器4应该是服务器1、2、3、4中最大的，但是由前<br>面已经有半数以上的服务器选举了服务器3，所以它只能接收当小弟的命了。</p>
+<p>（5）服务器5启动，同4一样称为follower。</p>
+<ol start="2">
+<li>非首次启动zk集群</li>
+</ol>
+<p>非首次启动zk集群时，每个节点会参考自身的事务ID值(zxid)； 选举Leader时有限选择zxid最大的节点作为Leader。</p>
+<h2 id="二-ZAB一致性协议"><a href="#二-ZAB一致性协议" class="headerlink" title="二. ZAB一致性协议"></a>二. ZAB一致性协议</h2><h1 id="zookeeper安装"><a href="#zookeeper安装" class="headerlink" title="zookeeper安装"></a>zookeeper安装</h1><p>上传压缩包并解压好之后。</p>
+<p>修改配置文件，创建data与log目录</p>
+<blockquote>
+<p># 创建zk存储数据目录</p>
+<p>mkdir -p &#x2F;opt&#x2F;lagou&#x2F;servers&#x2F;zookeeper-3.4.14&#x2F;data</p>
+<p># 创建zk日志文件目录</p>
+<p>mkdir -p &#x2F;opt&#x2F;lagou&#x2F;servers&#x2F;zookeeper-3.4.14&#x2F;data&#x2F;logs</p>
+</blockquote>
+<p>修改配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">数据目录</span></span><br><span class="line">dataDir=/opt/lagou/servers/zookeeper-3.4.14/data</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">日志目录</span></span><br><span class="line">dataLogDir=/opt/lagou/servers/zookeeper-3.4.14/data/logs</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">zk提供了自动清理事务日志和快照文件的功能，该参数指定清理频率</span></span><br><span class="line">autopurge.purgeInterval=1</span><br><span class="line"></span><br><span class="line">server.1=linux111:2888:3888</span><br><span class="line">server.2=linux112:2888:3888</span><br><span class="line">server.3=linux113:2888:3888</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>添加myid配置文件</p>
+<p>在zookeeper的data目录下创建一个myid文件，内容为1，记录每个zookeeper服务器在集群中的id</p>
+<blockquote>
+<p>echo 1 &gt; myid</p>
+</blockquote>
+<p>zookeeper节点没有固定的主从之分，所以需要分别把每台机器上的zk进程启动。</p>
+<p>linux111节点上</p>
+<p><img src="/Zookeeper.assets/image-20210110210847889.png" alt="image-20210110210847889"></p>
+<p>linux113节点上</p>
+<p><img src="/Zookeeper.assets/image-20210110210919626.png" alt="image-20210110210919626"></p>
+<p>可以看到这里linux113节点变成了leader, 其余节点都是follower, 这是zookeeper内部选择的节点角色。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/04/05/zookeeper/Zookeeper/" data-id="clumsd6xc000wabr7ghxrdvu3" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/04/05/%E6%95%B0%E4%BB%93%E7%BB%8F%E9%AA%8C/%E9%9D%A2%E8%AF%95%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/04/05/zookeeper/%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA(HA)/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/04/05/%E6%95%B0%E4%BB%93%E7%BB%8F%E9%AA%8C/%E9%9D%A2%E8%AF%95%E9%A2%98/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/Zookeeper/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA(HA)/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%BC%96%E7%A8%8B-RDD%E9%AB%98%E9%98%B6/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

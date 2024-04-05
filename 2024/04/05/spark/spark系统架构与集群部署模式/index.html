@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Spark系统架构: Cluster Manager Worker Node Driver Executor   Cluster Manager是集群资源的管理者;  Worker Node 工作节点管理本地资源；  Driver Program 运行应用的main方法并且创建了SparkContext, 由ClusterManager分配资源，SparkContext发送Task到Executo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/04/05/spark/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Spark系统架构: Cluster Manager Worker Node Driver Executor   Cluster Manager是集群资源的管理者;  Worker Node 工作节点管理本地资源；  Driver Program 运行应用的main方法并且创建了SparkContext, 由ClusterManager分配资源，SparkContext发送Task到Executo">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/image-20211015162049385.png">
+<meta property="og:image" content="http://example.com/images/image-20211020000610163.png">
+<meta property="og:image" content="http://example.com/images/image-20211020000701679.png">
+<meta property="og:image" content="http://example.com/images/image-20211020001631767.png">
+<meta property="og:image" content="http://example.com/images/image-20211020232305691.png">
+<meta property="og:image" content="http://example.com/images/image-20211020232737782.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211022164944398.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023003248268.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023003451440.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023003549734.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023004140212.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023004216783.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023005548428.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023005953962.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023011840456.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023011901383.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023011932162.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023012524177.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211024155544443.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211024232122054.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211024162150817.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211024162302902.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211024162729723.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211024163128726.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211025004224448.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211025004320237.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211025014823417.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211025015854747.png">
+<meta property="og:image" content="http://example.com/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211025015959424.png">
+<meta property="article:published_time" content="2024-04-05T14:53:22.936Z">
+<meta property="article:modified_time" content="2024-04-05T14:53:22.936Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/image-20211015162049385.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-spark/spark系统架构与集群部署模式" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/04/05/spark/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F/" class="article-date">
+  <time class="dt-published" datetime="2024-04-05T14:53:22.936Z" itemprop="datePublished">2024-04-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Spark系统架构"><a href="#Spark系统架构" class="headerlink" title="Spark系统架构:"></a>Spark系统架构:</h1><ul>
+<li>Cluster Manager</li>
+<li>Worker Node</li>
+<li>Driver</li>
+<li>Executor</li>
+</ul>
+<ol>
+<li><p>Cluster Manager是集群资源的管理者;</p>
+</li>
+<li><p>Worker Node 工作节点管理本地资源；</p>
+</li>
+<li><p>Driver Program 运行应用的main方法并且创建了SparkContext, 由ClusterManager分配资源，SparkContext发送Task到Executor上执行。</p>
+</li>
+<li><p>Executor 在工作节点上运行，执行Driver发送给Task, 并向Driver汇报计算结果。</p>
+</li>
+</ol>
+<p><img src="/images/image-20211015162049385.png" alt="image-20211015162049385"></p>
+<h1 id="Spark的集群管理类型"><a href="#Spark的集群管理类型" class="headerlink" title="Spark的集群管理类型"></a>Spark的集群管理类型</h1><p>Cluster Manager Types</p>
+<p>The system currently supports several cluster managers:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/spark-standalone.html">Standalone</a> – a simple cluster manager included with Spark that makes it easy to set up a cluster.</li>
+<li><a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/running-on-mesos.html">Apache Mesos</a> – a general cluster manager that can also run Hadoop MapReduce and service applications. (Deprecated)</li>
+<li><a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/running-on-yarn.html">Hadoop YARN</a> – the resource manager in Hadoop 2.</li>
+<li><a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/running-on-kubernetes.html">Kubernetes</a> – an open-source system for automating deployment, scaling, and management of containerized applications.</li>
+</ul>
+<p>参考： <a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/cluster-overview.html">http://spark.apache.org/docs/latest/cluster-overview.html</a></p>
+<p>​	1) . Standalone 本地模式</p>
+<p>​		独立模式，自带完整的服务，可单独部署到一个集群中，无需依赖任何其他资源管理系统；</p>
+<p>​		Cluster Manager角色：Master</p>
+<p>​		Worker Node角色: Worker</p>
+<p>​		仅支持粗粒度的资源分配方式</p>
+<p>参考链接(学习版本2.4.5): <a target="_blank" rel="noopener" href="http://spark.apache.org/docs/2.4.5/spark-standalone.html">http://spark.apache.org/docs/2.4.5/spark-standalone.html</a></p>
+<p>​	2). Spark on Yarn 模式</p>
+<p>​		国内运用最广的部署模式。</p>
+<p>​		Spark on Yarn 支持两种模式</p>
+<ul>
+<li><p>yarn-cluster：用于生产环境</p>
+</li>
+<li><p>yarn-client：用于交互调式</p>
+<p>  Cluster Manager:  ResourceManager</p>
+<p>  Worker Node: NodeManager</p>
+<p>  也是粗粒度的资源调度方式。</p>
+</li>
+</ul>
+<p>​    </p>
+<p>​	3). Spark on Mesos 模式</p>
+<p>​	官方推荐的模式，Spark运行在Mesos上会比运行在Yarn上更加灵活自然。</p>
+<p>​	Cluster Manager: Mesos Master</p>
+<p>​	Worker Node: Mesos Slave</p>
+<p>​	即支持粗粒度也支持细粒度的资源调度方式。</p>
+<p><strong>粗粒度模式（Coarse-grained Mode）</strong>：每个应用程序的运行环境由一个Dirver和若干个Executor组成，其中每个Executor占用若干资源，内部可运行多个Task。应用程序的各个任务正式运行之前，需要将运行环境中的资源都申请好，且运行过程中要一直占用这些资源，即使不用，最后程序运行结束后，回收这些资源。</p>
+<p><strong>细粒度模式（Fine-grained Mode）</strong>：鉴于粗粒度模式会造成大量资源浪费，Spark On Mesos还提供了另外一调度模式：细粒度模式，这种模式类似于现在的云计算，核心思想是按需分配。</p>
+<p>相关术语：</p>
+<p>Application： 用户提交的Spark应用程序，由集群中的一个Driver和多个Executor组成；</p>
+<p>Application jar： 包含Spark应用程序的jar文件；</p>
+<p>Driver： spark应用程序main方法开始的部分，由它创建并初始SparkContext；</p>
+<p>Cluster Manager： 资源管理服务，即 standalone，yarn，mesos等；</p>
+<p>Worker Node： 运行应用程序的节点；</p>
+<p>Executor： 运行应用程序Task和保存数据，每个应用成勋都有自己的executors，并且相互独立；</p>
+<p>Task： executor应用程序的最小单元；</p>
+<p>Job：在用户程序中，每次调用Action都会产生一个新的job；</p>
+<p>Stage：一个job又会被分成多个Stage,每个Stage是一系列Task的集合。</p>
+<h1 id="Spark-安装"><a href="#Spark-安装" class="headerlink" title="Spark 安装"></a>Spark 安装</h1><p>官网地址：<a target="_blank" rel="noopener" href="http://spark.apache.org/">http://spark.apache.org/</a><br>文档地址：<a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/">http://spark.apache.org/docs/latest/</a><br>下载地址：<a target="_blank" rel="noopener" href="http://spark.apache.org/downloads.html">http://spark.apache.org/downloads.html</a></p>
+<ol>
+<li><p>下载spark版本上传到服务器上</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/lagou/software/</span><br><span class="line">tar zxvf spark-2.4.5-bin-without-hadoop-scala-2.12.tgz</span><br><span class="line">mv spark-2.4.5-bin-without-hadoop-scala-2.12/ ../servers/spark-2.4.5/</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>配置环境变量</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/profile</span><br><span class="line">export SPARK_HOME=/opt/lagou/servers/spark-2.4.5</span><br><span class="line">export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin</span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>修改spark配置文件</p>
+<p> 配置文件所在目录：$SPARK_HOME&#x2F;conf</p>
+<p> 1.配置slaves节点，在slaves配置文件中添加spark集群节点</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vi slaves</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">###  实验节点的hostname</span></span></span><br><span class="line">linux111</span><br><span class="line">linux112</span><br><span class="line">linux113</span><br></pre></td></tr></table></figure>
+
+<p> 2.修改配置文件spark-default.conf</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Default system properties included when running spark-submit.</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">This is useful <span class="keyword">for</span> setting default environmental settings.</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Example:</span></span><br><span class="line">spark.master                     spark://linux111:7077</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开启eventLog日志</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">spark.eventLog.enabled           <span class="literal">true</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">指定日志在hdfs上的位置，如果目录不存在需要手动创建好</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">spark.eventLog.<span class="built_in">dir</span>               hdfs://linux111:9000/spark-eventLog</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">指定序列化器</span></span><br><span class="line">spark.serializer                 org.apache.spark.serializer.KryoSerializer</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">定义driver的内存大小</span></span><br><span class="line">spark.driver.memory              512m</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">executor运行时的JVM参数</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">spark.executor.extraJavaOptions  -XX:+PrintGCDetails -Dkey=value -Dnumbers=<span class="string">&quot;one two three&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<p> 3.修改spark-env.sh， spark启动时的一些环境变量</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/opt/lagou/servers/jdk1.8.0_231</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">spark处理hadoop上的文件时需要配置</span></span><br><span class="line">export HADOOP_HOME=/opt/lagou/servers/hadoop-2.9.2</span><br><span class="line">export HADOOP_CONF_DIR=/opt/lagou/servers/hadoop-2.9.2/etc/hadoop</span><br><span class="line">export SPARK_DIST_CLASSPATH=$(/opt/lagou/servers/hadoop-2.9.2/bin/hadoop classpath)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">master节点的hostname</span></span><br><span class="line">export SPARK_MASTER_HST=linux111</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">端口</span></span><br><span class="line">export SPARK_MASTER_PORT=7077</span><br></pre></td></tr></table></figure>
+
+<p> 在spark-env.sh配置文件中还有一些可选的配置项如下:</p>
+ <table class="table">
+   <tr><th style="width:21%">Environment Variable</th><th>Meaning</th></tr>
+   <tr>
+     <td><code>SPARK_MASTER_HOST</code></td>
+     <td>Bind the master to a specific hostname or IP address, for example a public one.</td>
+   </tr>
+   <tr>
+     <td><code>SPARK_MASTER_PORT</code></td>
+     <td>Start the master on a different port (default: 7077).</td>
+   </tr>
+   <tr>
+     <td><code>SPARK_MASTER_WEBUI_PORT</code></td>
+     <td>Port for the master web UI (default: 8080).</td>
+   </tr>
+   <tr>
+     <td><code>SPARK_MASTER_OPTS</code></td>
+     <td>Configuration properties that apply only to the master in the form "-Dx=y" (default: none). See below for a list of possible options.</td>
+   </tr>
+   <tr>
+     <td><code>SPARK_LOCAL_DIRS</code></td>
+     <td>
+     Directory to use for "scratch" space in Spark, including map output files and RDDs that get
+     stored on disk. This should be on a fast, local disk in your system. It can also be a
+     comma-separated list of multiple directories on different disks.
+     </td>
+   </tr>
+   <tr>
+     <td><code>SPARK_WORKER_CORES</code></td>
+     <td>Total number of cores to allow Spark applications to use on the machine (default: all available cores).</td>
+   </tr>
+   <tr>
+     <td><code>SPARK_WORKER_MEMORY</code></td>
+     <td>Total amount of memory to allow Spark applications to use on the machine, e.g. <code>1000m</code>, <code>2g</code> (default: total memory minus 1 GiB); note that each application's <i>individual</i> memory is configured using its <code>spark.executor.memory</code> property.</td>
+   </tr>
+   <tr>
+     <td><code>SPARK_WORKER_PORT</code></td>
+     <td>Start the Spark worker on a specific port (default: random).</td>
+   </tr>
+   <tr>
+     <td><code>SPARK_WORKER_WEBUI_PORT</code></td>
+     <td>Port for the worker web UI (default: 8081).</td>
+   </tr>
+   <tr>
+     <td><code>SPARK_WORKER_DIR</code></td>
+     <td>Directory to run applications in, which will include both logs and scratch space (default: SPARK_HOME/work).</td>
+   </tr>
+   <tr>
+     <td><code>SPARK_WORKER_OPTS</code></td>
+     <td>Configuration properties that apply only to the worker in the form "-Dx=y" (default: none). See below for a list of possible options.</td>
+   </tr>
+   <tr>
+     <td><code>SPARK_DAEMON_MEMORY</code></td>
+     <td>Memory to allocate to the Spark master and worker daemons themselves (default: 1g).</td>
+   </tr>
+   <tr>
+     <td><code>SPARK_DAEMON_JAVA_OPTS</code></td>
+     <td>JVM options for the Spark master and worker daemons themselves in the form "-Dx=y" (default: none).</td>
+   </tr>
+   <tr>
+     <td><code>SPARK_DAEMON_CLASSPATH</code></td>
+     <td>Classpath for the Spark master and worker daemons themselves (default: none).</td>
+   </tr>
+   <tr>
+     <td><code>SPARK_PUBLIC_DNS</code></td>
+     <td>The public DNS name of the Spark master and workers (default: none).</td>
+   </tr>
+ </table>
+ 
+ 
+ 
+ 
+ 
+<p> 4.将配置好的spark目录分发到其他集群节点上</p>
+<p> ​		使用scp命令将配置好的spark目录分发到其他集群节点上。</p>
+<p> 5.启动集群</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd $SPARK_HOME/sbin</span><br><span class="line">./start-all.sh</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><img src="/images/image-20211020000610163.png" alt="image-20211020000610163"></p>
+<p><img src="/images/image-20211020000701679.png" alt="image-20211020000701679"></p>
+<p>​     6.测试安装结果</p>
+<p>在$SPARK_HOME&#x2F;bin目录下执行下列测试样例。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">测试计算pi的命令</span></span><br><span class="line">run-example SparkPi 10</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">进入spark-shell环境下</span></span><br><span class="line">./spark-shell</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">由于测试的是Spark集群的standalone运行模式，因此文件读取来自hdfs  ??</span></span><br><span class="line">var lines = sc.textFile(&quot;/input/wc.txt&quot;)</span><br><span class="line">lines.flatMap(_.split(&quot; &quot;)).map((_, 1)).reduceByKey(_+_).collect().foreach(println)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20211020001631767.png" alt="image-20211020001631767"></p>
+<h1 id="Spark三种应用运行模式"><a href="#Spark三种应用运行模式" class="headerlink" title="Spark三种应用运行模式"></a>Spark三种应用运行模式</h1><p>​		这里说的三种运行模式是指</p>
+<h2 id="Spark的本地模式-local"><a href="#Spark的本地模式-local" class="headerlink" title="Spark的本地模式 local"></a>Spark的本地模式 local</h2><p>​		本地模式部署在单机，用于测试和实验。它是最简单的运行模式，所有的进程都运行在一台机器的JVM中，该模式下用多个线程模拟Spark的分布式计算，通常用来验证开发的应用程序。</p>
+<p>​		本地模式只需要把Spark安装包解压后修改常用配置即可使用，不需要启动Spark的Master，Worker守护进程，也不需要Hadoop服务(除非用到了HDFS)。</p>
+<ol>
+<li>关闭其他服务</li>
+</ol>
+<p>​         关闭hadoop集群相关的服务，保证单机上没有其他的服务干扰(用于验证)。</p>
+<ol start="2">
+<li><p>使用spark-shell查看spark的后台交互窗口</p>
+<blockquote>
+<p>spark-shell –master local</p>
+</blockquote>
+<pre><code> local：在本地启动一个线程来运行作业；
+ local[N]：启动了N个线程；
+ local[*]：使用了系统中所有的核；
+ local[N,M]：第一个参数表示用到核的个数；第二个参数表示容许作业失败的次数
+</code></pre>
+</li>
+</ol>
+<p>​		使用jps检查，会发现只有一个SparkSubmit进程</p>
+<p><img src="/images/image-20211020232305691.png" alt="image-20211020232305691"></p>
+<p>​		这里一个SparkSubmit进程包揽了上述spark运行中的所有进程角色。</p>
+<p><img src="/images/image-20211020232737782.png" alt="image-20211020232737782"></p>
+<p>​		3. 使用spark-submit脚本提交本地模式下的应用:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit --master local --class org.apache.spark.examples.SparkPi /opt/lagou/servers/spark-2.4.5/examples/jars/spark-examples_2.12-2.4.5.jar 4000</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Spark伪分布式-local-cluster"><a href="#Spark伪分布式-local-cluster" class="headerlink" title="Spark伪分布式 local-cluster"></a>Spark伪分布式 local-cluster</h2><p>​		伪分布模式是指在一台机器中模拟集群运行，相关的进程都在一台机器上。</p>
+<p>​		它不用启动资源调度服务。</p>
+<blockquote>
+<p>spark-shell –master local-cluster[2,4]</p>
+</blockquote>
+<pre><code>local-cluster[N,cores,memory]
+N模拟集群的 Slave（或worker）节点个数
+cores模拟集群中各个Slave节点上的内核数
+memory模拟集群的各个Slave节点上的内存大小
+</code></pre>
+<p>​		使用jps查看运行情况</p>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211022164944398.png" alt="image-20211022164944398"></p>
+<p>​		除了 SparkSubmit 进程外，还有2个 CoarseGrainedExecutorBackend 进程，SparkSubmit依然充当全能角色，又是Client进程，又是Driver程序，还有资源管理的作用。2个CoarseGrainedExecutorBackend模拟伪分布式集群中的两个slave节点。</p>
+<p>提交应用运行:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit --master local-cluster[4,2,1024] --class org.apache.spark.examples.SparkPi $SPARK_HOME/examples/jars/spark-examples_2.11-2.4.5.jar 10 </span><br></pre></td></tr></table></figure>
+
+<p>注意：伪分布式模式存在bug问题，实际上很少使用。</p>
+<h2 id="Spark集群分布式应用运行"><a href="#Spark集群分布式应用运行" class="headerlink" title="Spark集群分布式应用运行"></a>Spark集群分布式应用运行</h2><h3 id="standalone模式"><a href="#standalone模式" class="headerlink" title="standalone模式"></a>standalone模式</h3><h4 id="启动standalone模式"><a href="#启动standalone模式" class="headerlink" title="启动standalone模式"></a>启动standalone模式</h4><p> 参考文档: <a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/spark-standalone.html">http://spark.apache.org/docs/latest/spark-standalone.html</a></p>
+<p>​		这里standalone模式与单机模式不同，需要先启动Spark的Master和worker节点，关闭yarn对应的服务。</p>
+<p>启动standalone模式下的master节点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./sbin/start-master.sh</span><br></pre></td></tr></table></figure>
+
+<p>启动slave节点(Worker)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./sbin/start-slaves.sh</span><br></pre></td></tr></table></figure>
+
+<p>master节点上可以看到进程如下:</p>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023003248268.png" alt="image-20211023003248268"></p>
+<p>其他从节点上的进程正常情况只出现Worker</p>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023003451440.png" alt="image-20211023003451440"></p>
+<p>此时可以通过sparkUI界面查看集群的情况:</p>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023003549734.png" alt="image-20211023003549734"></p>
+<p>使用spark-shell连接到集群</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">./bin/spark-shell --master spark://IP:PORT</span></span><br><span class="line">./bin/spark-shell --master spark://linux111:7077</span><br></pre></td></tr></table></figure>
+
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023004140212.png" alt="image-20211023004140212"></p>
+<p>查看界面可以看到出现了提交的spark-shell应用作业</p>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023004216783.png" alt="image-20211023004216783"></p>
+<h4 id="standalone模式下的应用部署方式"><a href="#standalone模式下的应用部署方式" class="headerlink" title="standalone模式下的应用部署方式"></a>standalone模式下的应用部署方式</h4><p>​		使用spark-submit脚本提交应用程序到集群上时，有两种部署方式，分别为client&#x2F;cluster，它们的区别在与Driver运行的位置不同。</p>
+<ul>
+<li>client方式下，Driver运行在提交任务的客户端上，此时能够直接看到应用执行的结果，方便测试，验证， client模式是默认的部署方式。</li>
+<li>cluster方式下，Driver会随机运行在Spark集群的worker节点上，在提交程序的客户端上看不到执行的结果，该方式适合在生产环境下使用。</li>
+</ul>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023005548428.png" alt="image-20211023005548428"></p>
+<p><strong>client模式测试</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./spark-submit --class org.apache.spark.examples.SparkPi $SPARK_HOME/examples/jars/spark-examples_2.12-2.4.5.jar 1000</span><br></pre></td></tr></table></figure>
+
+<p>当上述命令执行中时，查看进程如下:</p>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023005953962.png" alt="image-20211023005953962"></p>
+<p>再次使用 jps 检查集群中的进程：<br><strong>Master</strong>进程做为cluster manager，管理集群资源<br><strong>Worker</strong> 管理节点资源<br><strong>SparkSubmit</strong> 做为Client端，运行 Driver 程序。Spark Application执行完成，进程终止<br><strong>CoarseGrainedExecutorBackend</strong>，executor角色，运行在Worker上，用来并发执行应用程序</p>
+<p><strong>cluste模式测试试</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./spark-submit --class org.apache.spark.examples.SparkPi --deploy-mode cluster $SPARK_HOME/examples/jars/spark-examples_2.12-2.4.5.jar 1000</span><br></pre></td></tr></table></figure>
+
+<p>指定deploy-mode类型为cluster</p>
+<p>查看集群的机器上的进程</p>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023011840456.png" alt="image-20211023011840456"></p>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023011901383.png" alt="image-20211023011901383"></p>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023011932162.png" alt="image-20211023011932162"></p>
+<p>在本次测试的三个集群机器上除了Master和Worker进程外的以下进程如下:</p>
+<p><strong>SparkSubmit</strong> 进程会在应用程序提交给集群之后就退出,这里与</p>
+<p><strong>CoarseGrainedExecutorBackend</strong>Worker节点上会启动 CoarseGrainedExecutorBackend用来执行程序</p>
+<p><strong>DriverWrapper</strong> Master会在集群中选择一个 Worker 进程生成一个子进程 DriverWrapper 来启动 Driver 程序(在本次测试中是linux111机器)进程会占用 Worker 进程的一个core（缺省分配1个core，1G内存<br>        应用程序的结果，会在执行 Driver 程序的节点的 stdout 中输出，而不是打印在屏幕上，本测试中在linux111机器$SPARK_HOME&#x2F;work&#x2F;driver-20211023011422-0002目录下可以看到提交的jar文件，以及输出日志和错误日志。</p>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211023012524177.png" alt="image-20211023012524177"></p>
+<h4 id="Spark-standalone集群的高可用配置"><a href="#Spark-standalone集群的高可用配置" class="headerlink" title="Spark standalone集群的高可用配置"></a>Spark standalone集群的高可用配置</h4><p>​		Spark standalone集群是Master-Slave架构的集群模式，同样存在着Master节点崩溃的问题，在Spark中提供了两种方案来解决Master节点崩溃所产生的问题:</p>
+<p>(1). 基于zookeeper的StandBy Master, 适用于生产环境中，将Spark连接到zookeeper，利用zookeeper提供的选举和状态保存的功能，当一个Master节点处于Active状态时，其他Master处于StandBy状态。</p>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211024155544443.png" alt="image-20211024155544443"></p>
+<p>(2). 基于文件系统的单点恢复。主要用于开发或者测试环境。将Spark Application 和 Worker 的注册信息保存在文件中，一旦Master发生故障，就可以重新启动Master进程，将系统恢复到之前的状态。</p>
+<p>​		<img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211024232122054.png" alt="image-20211024232122054"></p>
+<p>这里主要说明下基于Zookeeper的高可用配置方式。</p>
+<p>​		文档参考 <a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/spark-standalone.html#standby-masters-with-zookeeper">http://spark.apache.org/docs/latest/spark-standalone.html#standby-masters-with-zookeeper</a></p>
+<p>​		要求先将zookeeper集群启动好，测试中zk集群节点分别为linux111、linux112、linux113。</p>
+<ol>
+<li><p>关闭spark standby集群的Master和Worker进程</p>
+</li>
+<li><p>进入$SPARK_HOME&#x2F;conf目录下修改spark-env.sh文件，并分发到spark集群的其他节点上</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">因为要启动多个Master节点，所以这里不用指定</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">export</span> SPARK_MASTER_HOST=linux111</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">export</span> SPARK_MASTER_PORT=7077</span></span><br><span class="line"></span><br><span class="line">export SPARK_DAEMON_JAVA_OPTS=&quot;-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url=linux111,linux112,linux113 -Dspark.deploy.zookeeper.dir=/spark&quot;</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>修改玩个节点上的配置文件后启动集群</p>
+<p> 分别启动linux111和linux112上的Master进程，启动所有的slave节点上的worker进程。</p>
+<p> <img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211024162150817.png" alt="image-20211024162150817"></p>
+</li>
+<li><p>查看界面效果</p>
+<p> <img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211024162302902.png" alt="image-20211024162302902"></p>
+</li>
+</ol>
+<p>关闭linux111上的Master，观察linux112上的Master是否会由standby转换成Active状态。</p>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211024162729723.png" alt="image-20211024162729723"></p>
+<ol start="5">
+<li><p>查看zookeeper上的&#x2F;spark路径下的内容</p>
+<p> <img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211024163128726.png" alt="image-20211024163128726"></p>
+<p> 这里记录了master节点的状态信息。</p>
+</li>
+</ol>
+<h4 id="History-Server配置"><a href="#History-Server配置" class="headerlink" title="History Server配置"></a>History Server配置</h4><p>​		历史记录服务需要在spark的配置文件中开启日志记录功能</p>
+<p>spark-default.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">spark.master                     spark://linux111:7077</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开启日志功能</span></span><br><span class="line">spark.eventLog.enabled           true</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">记录存储在HDFS集群上的目录</span></span><br><span class="line">spark.eventLog.dir               hdfs://linux111:9000/spark-eventLog</span><br><span class="line">spark.eventLog.compress          true</span><br><span class="line">spark.serializer                 org.apache.spark.serializer.KryoSerializer</span><br><span class="line">spark.driver.memory              512m</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>spark-env.sh修改</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export SPARK_HISTORY_OPTS=&quot;-Dspark.history.ui.port=18080 -Dspark.history.retainedApplications=50 -Dspark.history.fs.logDirectory=hdfs://linux121:9000/spark-eventlog&quot; </span><br></pre></td></tr></table></figure>
+
+
+
+<p>启动日志记录服务</p>
+<ol>
+<li><p>先启动HDFS服务，因为日志需要写道集群上</p>
+</li>
+<li><p>启动HistoryServer服务</p>
+<p> $SPARK_HOME&#x2F;sbin&#x2F;start-history-server.sh</p>
+</li>
+<li><p>web地址查看: <a target="_blank" rel="noopener" href="http://linux111:18080/">http://linux111:18080/</a></p>
+<p> <img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211025004224448.png" alt="image-20211025004224448"></p>
+<p> 图中已有的两个任务记录对应在hdfs上指定的目录下</p>
+<p> <img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211025004320237.png" alt="image-20211025004320237"></p>
+</li>
+</ol>
+<h3 id="Spark-on-Yarn模式"><a href="#Spark-on-Yarn模式" class="headerlink" title="Spark on Yarn模式"></a>Spark on Yarn模式</h3><p>​		参考文档: <a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/running-on-yarn.html">http://spark.apache.org/docs/latest/running-on-yarn.html</a></p>
+<p>​		需要启动HDFS和yarn服务，同时关闭standalone模式下的Master和worker进程。</p>
+<p>​		在yarn模式中也有两种提交运行方式</p>
+<ul>
+<li><p>yarn-client</p>
+</li>
+<li><p>yarn-cluster</p>
+<p>  这两种的区别在与Driver执行的位置不同。</p>
+</li>
+</ul>
+<p>要使用spark on yar模式需要在spark配置文件中包含以下配置 </p>
+<ol>
+<li><p>spark-env.sh</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">hadoop相关的路径需要告诉spark</span></span><br><span class="line">export HADOOP_HOME=/opt/lagou/servers/hadoop-2.9.2</span><br><span class="line">export HADOOP_CONF_DIR=/opt/lagou/servers/hadoop-2.9.2/etc/hadoop</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>spark-default.conf</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">指定spark应用在yarn上的historyServer地址， 这个地址与spark的历史记录服务地址要一致，这样才能从yarn的界面跳转到spark任务的执行记录界面。</span></span><br><span class="line">spark.yarn.historyServer.address linux111:18080</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">优化，事先将jar上传到hdfs集群路径</span></span><br><span class="line">spark.yarn.jars    hdfs:///spark-yarn/jars/*.jar</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>应用部署方式</p>
+</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">client</span>  </span><br><span class="line">./spark-submit --master yarn --class org.apache.spark.examples.SparkPi --deploy-mode client $SPARK_HOME/examples/jars/spark-examples_2.12-2.4.5.jar 1000 </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">cluster</span></span><br><span class="line">./bin/spark-submit --master yarn --class org.apache.spark.examples.SparkPi --deploy-mode cluster $SPARK_HOME/examples/jars/spark-examples_2.12-2.4.5.jar 1000</span><br></pre></td></tr></table></figure>
+
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211025014823417.png" alt="image-20211025014823417"></p>
+<p>使用spark on yarn的方式，部署的应用执行情况就可以在yarn的应用追踪界面查看了。</p>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211025015854747.png" alt="image-20211025015854747"></p>
+<p>查看应用的执行记录。</p>
+<p>点击History链接即可跳转到spark的history Server界面查看spark应用的执行过程。</p>
+<p><img src="/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F.assets/image-20211025015959424.png" alt="image-20211025015959424"></p>
+<p>这里是因为将spark的historyServer服务与yarn的historyServer服务整合到了一起。</p>
+<p> 小结:</p>
+<p>​		spark的yarn部署模式需要启动的服务包括：HDFS, YARN, spark HistoryServer， yarn jobHistoryServer</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/04/05/spark/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F/" data-id="clumsd6xb000sabr71qbd2kcy" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/04/05/spark/spark%E7%BC%96%E7%A8%8B-RDD%E9%AB%98%E9%98%B6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/04/05/spark/spark%E7%BC%96%E7%A8%8B-SQL&DataFrame&DataSet/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/04/05/%E6%95%B0%E4%BB%93%E7%BB%8F%E9%AA%8C/%E9%9D%A2%E8%AF%95%E9%A2%98/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/Zookeeper/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/zookeeper/%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA(HA)/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%BC%96%E7%A8%8B-RDD%E9%AB%98%E9%98%B6/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/05/spark/spark%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
